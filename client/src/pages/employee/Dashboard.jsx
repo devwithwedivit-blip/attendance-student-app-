@@ -264,7 +264,7 @@ export default function EmployeeDashboard({ onNavigateHistory }) {
           )}
         </div>
 
-        {todayData?.records?.length === 0 ? (
+        {(!todayData?.records && !todayData?.todayRecords) || (todayData?.records?.length === 0 && todayData?.todayRecords?.length === 0) ? (
           <div style={{
             textAlign: 'center',
             padding: '2.5rem 1rem',
@@ -279,7 +279,7 @@ export default function EmployeeDashboard({ onNavigateHistory }) {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            {todayData?.records?.map((record) => (
+            {(todayData?.records || todayData?.todayRecords || []).map((record) => (
               <div
                 key={record.id}
                 style={{

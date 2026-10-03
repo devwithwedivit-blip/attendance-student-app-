@@ -26,8 +26,10 @@ export default function EmployeeHistory() {
     fetchHistory();
   }, []);
 
-  const totalDays = historyData.dailySummaries.length;
-  const totalSeconds = historyData.dailySummaries.reduce((acc, curr) => acc + (curr.totalDurationSeconds || 0), 0);
+  const dailySummaries = historyData?.dailySummaries || [];
+  const records = historyData?.records || [];
+  const totalDays = dailySummaries.length;
+  const totalSeconds = dailySummaries.reduce((acc, curr) => acc + (curr.totalDurationSeconds || 0), 0);
   const totalHours = (totalSeconds / 3600).toFixed(1);
   const avgHours = totalDays > 0 ? (totalHours / totalDays).toFixed(1) : '0.0';
 
@@ -78,7 +80,7 @@ export default function EmployeeHistory() {
         <div className="stat-card">
           <div>
             <div className="stat-label">Photographic Records</div>
-            <div className="stat-val">{historyData.records.length}</div>
+            <div className="stat-val">{records.length}</div>
           </div>
           <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-sm)', background: '#fffbeb', color: '#b45309', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Eye size={22} />
@@ -94,13 +96,13 @@ export default function EmployeeHistory() {
           <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
             Loading your attendance records...
           </div>
-        ) : historyData.dailySummaries.length === 0 ? (
+        ) : dailySummaries.length === 0 ? (
           <div style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text-muted)' }}>
             No past attendance logs found.
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            {historyData.dailySummaries.map((day) => (
+            {dailySummaries.map((day) => (
               <div
                 key={day.date}
                 style={{

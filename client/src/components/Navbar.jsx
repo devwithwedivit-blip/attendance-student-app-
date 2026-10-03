@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, LayoutDashboard, History, User, LogOut, Shield, FileSpreadsheet, Menu, X, GraduationCap, BellRing, Camera, Building2 } from 'lucide-react';
+import { Users, LayoutDashboard, History, User, LogOut, Shield, FileSpreadsheet, Menu, X, GraduationCap, BellRing, Camera, Building2, Calendar } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar({ currentView, setCurrentView }) {
@@ -18,13 +18,14 @@ export default function Navbar({ currentView, setCurrentView }) {
   const getPortalLabel = () => {
     if (isDean) return 'Office of the Dean Academics';
     if (isAdmin) return 'Administrative & Registrar ERP';
-    if (isStudent) return 'Student Attendance Terminal';
+    if (isStudent) return 'Student Portal • Academic Register';
     return 'Faculty Attendance Terminal';
   };
 
   const getDefaultHome = () => {
     if (isDean) return 'dean-dashboard';
     if (isAdmin) return 'admin-live';
+    if (isStudent) return 'student-attendance';
     return 'emp-dashboard';
   };
 
@@ -57,7 +58,15 @@ export default function Navbar({ currentView, setCurrentView }) {
 
           {/* Desktop Navigation Links */}
           <div className="nav-links">
-            {isDean ? (
+            {isStudent ? (
+              <button
+                className={`nav-link ${currentView === 'student-attendance' ? 'active' : ''}`}
+                onClick={() => handleNavClick('student-attendance')}
+              >
+                <Calendar size={16} className="nav-icon" />
+                <span className="nav-label">My Daily Attendance</span>
+              </button>
+            ) : isDean ? (
               <>
                 <button
                   className={`nav-link ${currentView === 'dean-dashboard' ? 'active' : ''}`}
@@ -202,7 +211,9 @@ export default function Navbar({ currentView, setCurrentView }) {
             flexDirection: 'column',
             gap: '0.5rem'
           }}>
-            {isDean ? (
+            {isStudent ? (
+              <button className="nav-link active" onClick={() => handleNavClick('student-attendance')}>My Daily Attendance</button>
+            ) : isDean ? (
               <>
                 <button className="nav-link" onClick={() => handleNavClick('dean-dashboard')}>Students & 75% Criteria</button>
                 <button className="nav-link" onClick={() => handleNavClick('dean-notices')}>Notice Dispatch Register</button>
@@ -219,9 +230,9 @@ export default function Navbar({ currentView, setCurrentView }) {
               </>
             ) : (
               <>
-                <button className="nav-link" onClick={() => handleNavClick('emp-dashboard')}>{isStudent ? 'Student Check In / Out' : 'Faculty Check In / Out'}</button>
+                <button className="nav-link" onClick={() => handleNavClick('emp-dashboard')}>Faculty Check In / Out</button>
                 <button className="nav-link" onClick={() => handleNavClick('emp-history')}>My Register</button>
-                <button className="nav-link" onClick={() => handleNavClick('emp-profile')}>{isStudent ? 'Student Profile' : 'Profile'}</button>
+                <button className="nav-link" onClick={() => handleNavClick('emp-profile')}>Profile</button>
               </>
             )}
           </div>

@@ -8,6 +8,7 @@ const attendanceRoutes = require('./routes/attendance');
 const adminRoutes = require('./routes/admin');
 const employeeRoutes = require('./routes/employees');
 const deanRoutes = require('./routes/dean');
+const studentRoutes = require('./routes/student');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -37,6 +38,7 @@ app.use('/api/attendance', attendanceRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin/employees', employeeRoutes);
 app.use('/api/dean', deanRoutes);
+app.use('/api/student', studentRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

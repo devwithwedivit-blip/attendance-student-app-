@@ -420,9 +420,12 @@ export async function handleMockRequest(endpoint, options = {}) {
     }
 
     return {
+      today,
       status,
       activeCheckIn,
       latestCheckOut,
+      firstCheckIn: todayRecords.find(r => r.type === 'check_in')?.timestamp || null,
+      records: todayRecords,
       todayRecords,
       totalSeconds,
       has_checked_in: status !== 'NOT_CHECKED_IN',
@@ -516,7 +519,44 @@ export async function handleMockRequest(endpoint, options = {}) {
       .filter(r => r.user_id === userId)
       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-    return { records };
+    const daysMap = {};
+    for (const rec of records) {
+      const dateKey = rec.timestamp.split('T')[0] || rec.timestamp.split(' ')[0];
+      if (!daysMap[dateKey]) {
+        daysMap[dateKey] = {
+          date: dateKey,
+          records: [],
+          checkIns: [],
+          checkOuts: [],
+          firstCheckIn: null,
+          latestCheckOut: null,
+          totalDurationSeconds: 0
+        };
+      }
+      daysMap[dateKey].records.push(rec);
+      if (rec.type === 'check_in') daysMap[dateKey].checkIns.push(rec);
+      if (rec.type === 'check_out') daysMap[dateKey].checkOuts.push(rec);
+    }
+
+    const dailySummaries = Object.values(daysMap).map(day => {
+      day.records.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+      day.firstCheckIn = day.checkIns[0] || null;
+      day.latestCheckOut = day.checkOuts[day.checkOuts.length - 1] || null;
+
+      let inTime = null;
+      let totalSeconds = 0;
+      for (const r of day.records) {
+        if (r.type === 'check_in') inTime = new Date(r.timestamp).getTime();
+        else if (r.type === 'check_out' && inTime) {
+          totalSeconds += Math.max(0, Math.floor((new Date(r.timestamp).getTime() - inTime) / 1000));
+          inTime = null;
+        }
+      }
+      day.totalDurationSeconds = totalSeconds;
+      return day;
+    });
+
+    return { records, dailySummaries };
   }
 
   // 8. DEAN: Dashboard
@@ -554,8 +594,11 @@ export async function handleMockRequest(endpoint, options = {}) {
       complianceRate: students.length > 0 ? Math.round((compliantCount / students.length) * 100) : 100,
       totalNoticesSent: notices.length,
       noticesPending,
+      pendingAcknowledgements: noticesPending,
       noticesAcknowledged,
-      departmentStats: deptStats
+      acknowledgedNotices: noticesAcknowledged,
+      departmentStats: deptStats,
+      deptStats
     };
   }
 
@@ -578,9 +621,9 @@ export async function handleMockRequest(endpoint, options = {}) {
 
     if (dept) filtered = filtered.filter(s => s.department === dept);
     if (sem) filtered = filtered.filter(s => s.semester === sem);
-    if (range === 'critical') filtered = filtered.filter(s => s.attendance_percent < 60);
-    else if (range === 'below75') filtered = filtered.filter(s => s.attendance_percent < 75);
-    else if (range === 'above75') filtered = filtered.filter(s => s.attendance_percent >= 75);
+    if (range === 'critical' || range === 'below_60') filtered = filtered.filter(s => s.attendance_percent < 60);
+    else if (range === 'below75' || range === 'below_75') filtered = filtered.filter(s => s.attendance_percent < 75);
+    else if (range === 'above75' || range === 'compliant') filtered = filtered.filter(s => s.attendance_percent >= 75);
 
     if (query) {
       filtered = filtered.filter(s =>
@@ -879,6 +922,101 @@ export async function handleMockRequest(endpoint, options = {}) {
     const csvContent = 'Date,Code,Name,Department,Type,Time\n' +
       getRecords().map(r => `${r.timestamp.split('T')[0]},${r.employee_code || ''},"${r.user_name || ''}","${r.user_department || ''}",${r.type},${r.timestamp}`).join('\n');
     return new Blob([csvContent], { type: 'text/csv' });
+  }
+
+  // 22. STUDENT: My Attendance Register on Days
+  if (path === '/api/student/my-attendance') {
+    const subjects = [
+      'CS401: Design & Analysis of Algorithms',
+      'CS402: Operating Systems & Architecture',
+      'CS403: Database Management Systems & SQL',
+      'CS404: Computer Networks & Communications',
+      'CS405: Software Engineering & Agile Dev'
+    ];
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const absentDays = new Set([9, 19, 28, 38, 47, 56]); // 6 absences = 54/60 = 90.0%
+
+    const days = [];
+    let d = new Date(2024, 6, 15); // Start mid-July
+    const now = new Date(2024, 9, 3);
+    let workingDay = 0;
+
+    while (d <= now && workingDay < 60) {
+      const dow = d.getDay();
+      if (dow !== 0 && dow !== 6) { // Mon-Fri
+        workingDay++;
+        const isAbsent = absentDays.has(workingDay);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+
+        days.push({
+          id: workingDay,
+          date: `${yyyy}-${mm}-${dd}`,
+          day: daysOfWeek[dow],
+          subject: subjects[(workingDay - 1) % subjects.length],
+          status: isAbsent ? 'Absent' : 'Present',
+          in_time: isAbsent ? null : '09:15 AM',
+          out_time: isAbsent ? null : '04:30 PM',
+          hours: isAbsent ? '0.0h' : '7h 15m',
+          credit: isAbsent ? '0.0' : '1.0'
+        });
+      }
+      d.setDate(d.getDate() + 1);
+    }
+
+    days.reverse(); // Newest first
+
+    return {
+      student: {
+        name: currentUser?.name?.replace(' (Student)', '') || 'Saatwik Gosain',
+        roll_number: 'CSE20',
+        official_roll: 'FU-2024-CSE20',
+        department: 'Computer Science & Engineering',
+        semester: 'Sem 4',
+        total_working_days: 60,
+        days_present: 54,
+        days_absent: 6,
+        attendance_percent: 90.0,
+        is_compliant: true
+      },
+      days
+    };
+  }
+
+  // 23. STUDENT: Export CSV
+  if (path === '/api/student/export-csv') {
+    const subjects = [
+      'CS401: Design & Analysis of Algorithms',
+      'CS402: Operating Systems & Architecture',
+      'CS403: Database Management Systems & SQL',
+      'CS404: Computer Networks & Communications',
+      'CS405: Software Engineering & Agile Dev'
+    ];
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const absentDays = new Set([9, 19, 28, 38, 47, 56]);
+
+    let csv = "Date,Day,Course / Subject,Status,In-Time,Out-Time,Duration,Credit\n";
+    let d = new Date(2024, 6, 15);
+    const now = new Date(2024, 9, 3);
+    let workingDay = 0;
+
+    const rows = [];
+    while (d <= now && workingDay < 60) {
+      const dow = d.getDay();
+      if (dow !== 0 && dow !== 6) {
+        workingDay++;
+        const isAbsent = absentDays.has(workingDay);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        rows.push(`"${yyyy}-${mm}-${dd}","${daysOfWeek[dow]}","${subjects[(workingDay - 1) % subjects.length]}","${isAbsent ? 'Absent' : 'Present'}","${isAbsent ? 'N/A' : '09:15 AM'}","${isAbsent ? 'N/A' : '04:30 PM'}","${isAbsent ? '0.0h' : '7h 15m'}","${isAbsent ? '0.0' : '1.0'}"`);
+      }
+      d.setDate(d.getDate() + 1);
+    }
+    rows.reverse();
+    csv += rows.join('\n');
+    return new Blob([csv], { type: 'text/csv' });
   }
 
   // Default fallback for unknown routes

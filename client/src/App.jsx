@@ -19,15 +19,20 @@ import AdminReports from './pages/admin/Reports';
 import DeanDashboard from './pages/dean/DeanDashboard';
 import NoticeLog from './pages/dean/NoticeLog';
 
+// Student Portal Page (Dedicated for Student Role)
+import StudentPortal from './pages/student/StudentPortal';
+
 function AppContent() {
-  const { user, loading, isAdmin, isDean } = useAuth();
+  const { user, loading, isAdmin, isDean, isStudent } = useAuth();
   const [authView, setAuthView] = useState('login'); // 'login' | 'signup'
   const [currentView, setCurrentView] = useState('emp-dashboard');
 
   // Set default view based on role once logged in
   useEffect(() => {
     if (user) {
-      if (isDean) {
+      if (isStudent) {
+        setCurrentView('student-attendance');
+      } else if (isDean) {
         setCurrentView('dean-dashboard');
       } else if (isAdmin) {
         setCurrentView('admin-live');
@@ -35,7 +40,7 @@ function AppContent() {
         setCurrentView('emp-dashboard');
       }
     }
-  }, [user, isAdmin, isDean]);
+  }, [user, isAdmin, isDean, isStudent]);
 
   if (loading) {
     return (
@@ -77,6 +82,9 @@ function AppContent() {
       <Navbar currentView={currentView} setCurrentView={setCurrentView} />
 
       <main className="main-content">
+        {/* Student Portal (Exclusive for Students) */}
+        {currentView === 'student-attendance' && <StudentPortal />}
+
         {/* Dean Academics Views */}
         {currentView === 'dean-dashboard' && <DeanDashboard />}
         {currentView === 'dean-notices' && <NoticeLog />}
