@@ -71,7 +71,9 @@ export default function EmployeeProfile() {
             textAlign: 'right'
           }}>
             <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#fef3c7' }}>CARD TYPE</div>
-            <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#ffffff' }}>FACULTY / STAFF ID</div>
+            <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#ffffff' }}>
+              {user.role === 'student' ? 'STUDENT ID CARD' : 'FACULTY / STAFF ID'}
+            </div>
           </div>
         </div>
 
@@ -96,7 +98,7 @@ export default function EmployeeProfile() {
             </div>
             <span className="badge badge-emerald" style={{ fontSize: '0.75rem', fontWeight: 700 }}>
               <ShieldCheck size={13} />
-              VERIFIED FACULTY
+              {user.role === 'student' ? 'ENROLLED STUDENT' : 'VERIFIED FACULTY'}
             </span>
           </div>
 
@@ -104,7 +106,7 @@ export default function EmployeeProfile() {
           <div style={{ flex: 1, minWidth: '260px' }}>
             <h2 style={{ fontSize: '1.6rem', color: '#0f172a', marginBottom: '0.25rem' }}>{user.name}</h2>
             <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#1e3a8a', marginBottom: '0.75rem' }}>
-              Assistant Professor / Faculty Member
+              {user.role === 'student' ? 'Undergraduate Student • Batch 2024' : 'Assistant Professor / Faculty Member'}
             </div>
 
             <div style={{
@@ -118,9 +120,11 @@ export default function EmployeeProfile() {
               marginBottom: '1rem'
             }}>
               <div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Faculty Code</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
+                  {user.role === 'student' ? 'Student Roll / Code' : 'Faculty Code'}
+                </div>
                 <div style={{ fontSize: '0.95rem', fontWeight: 800, fontFamily: 'monospace', color: '#0f172a' }}>
-                  {user.employee_code || 'SMCS-FAC-01'}
+                  {user.employee_code || 'FU-2024-01'}
                 </div>
               </div>
               <div>
@@ -136,7 +140,9 @@ export default function EmployeeProfile() {
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Date of Appointment</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
+                  {user.role === 'student' ? 'Enrolled Since' : 'Date of Appointment'}
+                </div>
                 <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#0f172a' }}>
                   {formatDate(user.created_at)}
                 </div>

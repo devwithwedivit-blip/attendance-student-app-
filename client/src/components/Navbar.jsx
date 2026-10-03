@@ -13,9 +13,12 @@ export default function Navbar({ currentView, setCurrentView }) {
     setMobileMenuOpen(false);
   };
 
+  const isStudent = user?.role === 'student';
+
   const getPortalLabel = () => {
     if (isDean) return 'Office of the Dean Academics';
     if (isAdmin) return 'Administrative & Registrar ERP';
+    if (isStudent) return 'Student Attendance Terminal';
     return 'Faculty Attendance Terminal';
   };
 
@@ -134,7 +137,7 @@ export default function Navbar({ currentView, setCurrentView }) {
                   onClick={() => handleNavClick('emp-dashboard')}
                 >
                   <Camera size={16} className="nav-icon" />
-                  <span className="nav-label">Faculty Check In / Out</span>
+                  <span className="nav-label">{isStudent ? 'Student Check In / Out' : 'Faculty Check In / Out'}</span>
                 </button>
                 <button
                   className={`nav-link ${currentView === 'emp-history' ? 'active' : ''}`}
@@ -148,7 +151,7 @@ export default function Navbar({ currentView, setCurrentView }) {
                   onClick={() => handleNavClick('emp-profile')}
                 >
                   <User size={16} className="nav-icon" />
-                  <span className="nav-label">Faculty Profile</span>
+                  <span className="nav-label">{isStudent ? 'Student Profile' : 'Faculty Profile'}</span>
                 </button>
               </>
             )}
@@ -165,7 +168,7 @@ export default function Navbar({ currentView, setCurrentView }) {
               <div className="nav-profile-info">
                 <div className="nav-profile-name">{user.name}</div>
                 <div className={`nav-profile-role ${isDean ? 'dean-role' : ''}`}>
-                  {isDean ? '🎓 Dean (Academics)' : isAdmin ? '🛡️ Registrar / Admin' : user.employee_code || user.department}
+                  {isDean ? '🎓 Dean (Academics)' : isAdmin ? '🛡️ Registrar / Admin' : isStudent ? `🎒 Student • ${user.employee_code || 'CSE20'}` : (user.employee_code || user.department)}
                 </div>
               </div>
             </div>
@@ -216,9 +219,9 @@ export default function Navbar({ currentView, setCurrentView }) {
               </>
             ) : (
               <>
-                <button className="nav-link" onClick={() => handleNavClick('emp-dashboard')}>Faculty Check In / Out</button>
+                <button className="nav-link" onClick={() => handleNavClick('emp-dashboard')}>{isStudent ? 'Student Check In / Out' : 'Faculty Check In / Out'}</button>
                 <button className="nav-link" onClick={() => handleNavClick('emp-history')}>My Register</button>
-                <button className="nav-link" onClick={() => handleNavClick('emp-profile')}>Profile</button>
+                <button className="nav-link" onClick={() => handleNavClick('emp-profile')}>{isStudent ? 'Student Profile' : 'Profile'}</button>
               </>
             )}
           </div>

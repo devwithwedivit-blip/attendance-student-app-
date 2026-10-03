@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
   name TEXT NOT NULL,
   email TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
-  role TEXT NOT NULL DEFAULT 'employee' CHECK (role IN ('employee', 'admin', 'dean')),
+  role TEXT NOT NULL DEFAULT 'employee' CHECK (role IN ('employee', 'admin', 'dean', 'student')),
   department TEXT NOT NULL DEFAULT 'Engineering',
   employee_code TEXT UNIQUE,
   profile_photo_url TEXT,

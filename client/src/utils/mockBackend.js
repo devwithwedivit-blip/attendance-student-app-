@@ -66,14 +66,14 @@ const INITIAL_USERS = [
   },
   {
     id: 4,
-    name: 'Prof. Marcus Vance',
-    email: 'marcus.vance@futureuniversity.edu.in',
-    aliases: ['marcus.vance@stmaryconvent.edu.in', 'marcus.vance@rbmi.in'],
+    name: 'Saatwik Gosain',
+    email: 'saatwik.gosain@futureuniversity.edu.in',
+    aliases: ['saatwik.gosain@students.futureuniversity.edu.in', 'cse20@futureuniversity.edu.in', 'marcus.vance@futureuniversity.edu.in'],
     password: 'password123',
-    role: 'employee',
-    department: 'Management & MBA',
-    employee_code: 'FU-FAC-1002',
-    profile_photo_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80',
+    role: 'student',
+    department: 'Computer Science & Engineering',
+    employee_code: 'CSE20',
+    profile_photo_url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=256&q=80',
     is_active: 1,
     created_at: '2023-08-20T09:00:00.000Z'
   },
@@ -120,7 +120,8 @@ const INITIAL_STUDENTS = [
   { id: 11, name: 'Devendra Yadav', roll_number: 'FU-2024-PHARM01', email: 'devendra.yadav@students.futureuniversity.edu.in', department: 'Pharmacy / B.Pharm', semester: 'Sem 6', total_working_days: 60, days_present: 54 },
   { id: 12, name: 'Meera Pillai', roll_number: 'FU-2024-PHARM02', email: 'meera.pillai@students.futureuniversity.edu.in', department: 'Pharmacy / B.Pharm', semester: 'Sem 6', total_working_days: 60, days_present: 39 },
   { id: 13, name: 'Siddharth Roy', roll_number: 'FU-2024-BCA01', email: 'siddharth.roy@students.futureuniversity.edu.in', department: 'BCA', semester: 'Sem 2', total_working_days: 60, days_present: 52 },
-  { id: 14, name: 'Tanvi Deshmukh', roll_number: 'FU-2024-BCA02', email: 'tanvi.deshmukh@students.futureuniversity.edu.in', department: 'BCA', semester: 'Sem 2', total_working_days: 60, days_present: 40 }
+  { id: 14, name: 'Tanvi Deshmukh', roll_number: 'FU-2024-BCA02', email: 'tanvi.deshmukh@students.futureuniversity.edu.in', department: 'BCA', semester: 'Sem 2', total_working_days: 60, days_present: 40 },
+  { id: 15, name: 'Saatwik Gosain', roll_number: 'FU-2024-CSE20', email: 'saatwik.gosain@students.futureuniversity.edu.in', department: 'Computer Science & Engineering', semester: 'Sem 4', total_working_days: 60, days_present: 54 }
 ];
 
 // Initial Notices
@@ -176,15 +177,15 @@ const INITIAL_RECORDS = [
     user_id: 4,
     type: 'check_in',
     timestamp: `${todayStr}T09:12:00.000Z`,
-    photo_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+    photo_url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80',
     latitude: 28.6139,
     longitude: 77.2090,
     flagged: 0,
     flag_reason: null,
-    user_name: 'Prof. Marcus Vance',
-    user_email: 'marcus.vance@futureuniversity.edu.in',
-    user_department: 'Management & MBA',
-    employee_code: 'FU-FAC-1002'
+    user_name: 'Saatwik Gosain',
+    user_email: 'saatwik.gosain@futureuniversity.edu.in',
+    user_department: 'Computer Science & Engineering',
+    employee_code: 'CSE20'
   }
 ];
 

@@ -117,7 +117,7 @@ async function seed() {
   );
   console.log('✅ Admin created: admin@futureuniversity.edu.in / admin123');
 
-  // 3. Create Sample Faculty / Teachers
+  // 3. Create Sample Faculty / Staff / Students
   const sampleUsers = [
     {
       name: 'Prof. Sarah Chen',
@@ -125,15 +125,17 @@ async function seed() {
       aliasEmail: 'sarah.chen@stmaryconvent.edu.in',
       department: 'Computer Science & Engineering',
       code: 'FU-FAC-1001',
+      role: 'employee',
       photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=256&q=80'
     },
     {
-      name: 'Prof. Marcus Vance',
-      email: 'marcus.vance@futureuniversity.edu.in',
-      aliasEmail: 'marcus.vance@stmaryconvent.edu.in',
-      department: 'Management & MBA',
-      code: 'FU-FAC-1002',
-      photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80'
+      name: 'Saatwik Gosain (Student)',
+      email: 'saatwik.gosain@futureuniversity.edu.in',
+      aliasEmail: 'saatwik.gosain@stmaryconvent.edu.in',
+      department: 'Computer Science & Engineering',
+      code: 'CSE20',
+      role: 'student',
+      photo: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=256&q=80'
     },
     {
       name: 'Prof. Priya Sharma',
@@ -141,6 +143,7 @@ async function seed() {
       aliasEmail: 'priya.sharma@stmaryconvent.edu.in',
       department: 'Pharmacy / B.Pharm',
       code: 'FU-FAC-1003',
+      role: 'employee',
       photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=256&q=80'
     },
     {
@@ -149,32 +152,35 @@ async function seed() {
       aliasEmail: 'alex.rivera@stmaryconvent.edu.in',
       department: 'Information Technology',
       code: 'FU-FAC-1004',
+      role: 'employee',
       photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&q=80'
     }
   ];
 
   const employeeIds = [];
   for (const emp of sampleUsers) {
+    const userRole = emp.role || 'employee';
     const res = db.run(
       `INSERT INTO users (name, email, password_hash, role, department, employee_code, profile_photo_url)
-       VALUES (?, ?, ?, 'employee', ?, ?, ?)`,
-      [emp.name, emp.email, defaultPassword, emp.department, emp.code, emp.photo]
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [emp.name, emp.email, defaultPassword, userRole, emp.department, emp.code, emp.photo]
     );
     employeeIds.push({ id: res.lastInsertRowid, ...emp });
 
     if (emp.aliasEmail) {
       db.run(
         `INSERT INTO users (name, email, password_hash, role, department, employee_code, profile_photo_url)
-         VALUES (?, ?, ?, 'employee', ?, ?, ?)`,
-        [emp.name, emp.aliasEmail, defaultPassword, emp.department, `${emp.code}-OLD`, emp.photo]
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [emp.name, emp.aliasEmail, defaultPassword, userRole, emp.department, `${emp.code}-OLD`, emp.photo]
       );
     }
   }
-  console.log(`✅ ${employeeIds.length} faculty/staff members created.`);
+  console.log(`✅ ${employeeIds.length} faculty/staff/students created.`);
 
   // 4. Create Students Roster for Future University
   const sampleStudents = [
     // Science Sem 4
+    { name: 'Saatwik Gosain', roll: 'FU-2024-CSE20', email: 'saatwik.gosain@students.futureuniversity.edu.in', dept: 'Computer Science & Engineering', sem: 'Sem 4', total: 60, present: 54 }, // 90.0%
     { name: 'Aarav Mehta', roll: 'FU-2024-CS01', email: 'aarav.mehta@students.futureuniversity.edu.in', dept: 'Computer Science & Engineering', sem: 'Sem 4', total: 60, present: 55 }, // 91.7%
     { name: 'Ishita Verma', roll: 'FU-2024-CS02', email: 'ishita.verma@students.futureuniversity.edu.in', dept: 'Computer Science & Engineering', sem: 'Sem 4', total: 60, present: 51 }, // 85.0%
     { name: 'Rohan Gupta', roll: 'FU-2024-CS03', email: 'rohan.gupta@students.futureuniversity.edu.in', dept: 'Computer Science & Engineering', sem: 'Sem 4', total: 60, present: 46 }, // 76.7% Borderline
@@ -320,6 +326,7 @@ async function seed() {
   console.log('🎓 Academic Head: dean@futureuniversity.edu.in  / dean123');
   console.log('👑 Admin:         admin@futureuniversity.edu.in / admin123');
   console.log('👤 Faculty/Staff: sarah.chen@futureuniversity.edu.in / password123');
+  console.log('🎒 Student:       saatwik.gosain@futureuniversity.edu.in / password123 (Roll: CSE20)');
   console.log('==================================================');
 }
 

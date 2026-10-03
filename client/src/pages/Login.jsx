@@ -173,10 +173,10 @@ export default function Login({ onNavigateSignup }) {
               type="button"
               className="btn btn-outline btn-sm"
               style={{ justifyContent: 'flex-start', fontSize: '0.785rem' }}
-              onClick={() => handleQuickDemo('marcus.vance@futureuniversity.edu.in', 'password123')}
+              onClick={() => handleQuickDemo('saatwik.gosain@futureuniversity.edu.in', 'password123')}
             >
-              <User size={14} color="#3b82f6" />
-              <span>Prof. Marcus (MBA)</span>
+              <GraduationCap size={14} color="#3b82f6" />
+              <span>Saatwik Gosain (CSE20)</span>
             </button>
           </div>
         </div>

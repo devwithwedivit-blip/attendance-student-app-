@@ -56,7 +56,7 @@ A comprehensive ERP and Attendance Management System for **Future University**, 
 | 🎓 **Academic Head** | Dr. Rajesh Sharma | `dean@futureuniversity.edu.in` | `dean123` | Full Academic Roster, 75% Compliance, Notices, Committee CSV |
 | 👑 **Administrator** | Alex Mercer | `admin@futureuniversity.edu.in` | `admin123` | HR & Administrative Management, Faculty Records, Live Monitor |
 | 👤 **Faculty (CSE)** | Prof. Sarah Chen | `sarah.chen@futureuniversity.edu.in` | `password123` | Computer Science Dept • Camera Check-In/Out Hub |
-| 👤 **Faculty (MBA)** | Prof. Marcus Vance | `marcus.vance@futureuniversity.edu.in` | `password123` | Management Dept • Attendance History |
+| 🎒 **Student (CSE)** | Saatwik Gosain | `saatwik.gosain@futureuniversity.edu.in` | `password123` | Student Roll: CSE20 • Student Attendance Terminal & ID Card |
 
 > 💡 **Quick 1-Click Login**: The login screen ([http://localhost:5173](http://localhost:5173)) features 1-click buttons to instantly log into any portal.
 

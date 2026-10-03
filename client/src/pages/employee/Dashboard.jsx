@@ -126,7 +126,7 @@ export default function EmployeeDashboard({ onNavigateHistory }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           <Sparkles size={16} color="#1e3a8a" />
           <span>
-            <strong>Institutional Directive (Ref: SMCS/ADMIN/2024/ATT-08):</strong> All faculty and staff must record duty arrival and departure using this photographic terminal.
+            <strong>Institutional Directive (Ref: FU/ADMIN/2024/ATT-08):</strong> All students, faculty, and staff must record arrival and departure using this photographic terminal.
           </span>
         </div>
         <span style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#1e40af' }}>
@@ -137,9 +137,9 @@ export default function EmployeeDashboard({ onNavigateHistory }) {
       {/* Header Info */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem' }}>Faculty & Staff Attendance Terminal</h1>
+          <h1 style={{ fontSize: '1.75rem' }}>{user?.role === 'student' ? 'Student Attendance Terminal' : 'Faculty & Staff Attendance Terminal'}</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-            Official Biometric & Photographic Duty Register — Future University
+            Official Biometric & Photographic Register — Future University
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
