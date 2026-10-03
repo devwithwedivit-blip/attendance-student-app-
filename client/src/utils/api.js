@@ -1,4 +1,7 @@
-const BASE_URL = '';
+// In local dev, Vite proxy handles /api → localhost:5000
+// In production (Netlify), set VITE_API_URL to your deployed backend URL
+// e.g. https://your-backend.onrender.com
+const BASE_URL = import.meta.env.VITE_API_URL || '';
 
 /**
  * Universal API request wrapper

@@ -1,0 +1,28 @@
+[build]
+  # Netlify builds from the client subfolder
+  base = "client"
+  command = "npm install && npm run build"
+  publish = "dist"
+
+# SPA fallback — redirect all routes to index.html for client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Proxy API calls to the backend server (update YOUR_BACKEND_URL below)
+# Uncomment these once your backend is deployed on Render/Railway/etc.
+# [[redirects]]
+#   from = "/api/*"
+#   to = "https://YOUR-BACKEND-URL.onrender.com/api/:splat"
+#   status = 200
+#   force = true
+
+# [[redirects]]
+#   from = "/uploads/*"
+#   to = "https://YOUR-BACKEND-URL.onrender.com/uploads/:splat"
+#   status = 200
+#   force = true
+
+[build.environment]
+  NODE_VERSION = "20"
