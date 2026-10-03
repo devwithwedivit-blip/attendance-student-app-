@@ -4,7 +4,7 @@
  * When a live backend URL (VITE_API_URL) is not present or returns 404, this handles all requests seamlessly.
  */
 
-const STORAGE_KEY_PREFIX = 'smcs_erp_';
+const STORAGE_KEY_PREFIX = 'fu_erp_';
 
 function getStorage(key, defaultValue) {
   try {
@@ -28,12 +28,12 @@ const INITIAL_USERS = [
   {
     id: 1,
     name: 'Dr. Rajesh Sharma (Academic Head)',
-    email: 'dean@stmaryconvent.edu.in',
-    aliases: ['dean@rbmi.in'],
+    email: 'dean@futureuniversity.edu.in',
+    aliases: ['dean@stmaryconvent.edu.in', 'dean@rbmi.in'],
     password: 'dean123',
     role: 'dean',
     department: 'Academics',
-    employee_code: 'SMCS-DEAN-001',
+    employee_code: 'FU-DEAN-001',
     profile_photo_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80',
     is_active: 1,
     created_at: '2023-01-15T09:00:00.000Z'
@@ -41,12 +41,12 @@ const INITIAL_USERS = [
   {
     id: 2,
     name: 'Alex Mercer (Admin)',
-    email: 'admin@stmaryconvent.edu.in',
-    aliases: ['admin@rbmi.in'],
+    email: 'admin@futureuniversity.edu.in',
+    aliases: ['admin@stmaryconvent.edu.in', 'admin@rbmi.in'],
     password: 'admin123',
     role: 'admin',
     department: 'Management',
-    employee_code: 'SMCS-ADM-001',
+    employee_code: 'FU-ADM-001',
     profile_photo_url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=256&q=80',
     is_active: 1,
     created_at: '2023-02-01T09:00:00.000Z'
@@ -54,12 +54,12 @@ const INITIAL_USERS = [
   {
     id: 3,
     name: 'Prof. Sarah Chen',
-    email: 'sarah.chen@stmaryconvent.edu.in',
-    aliases: ['sarah.chen@rbmi.in'],
+    email: 'sarah.chen@futureuniversity.edu.in',
+    aliases: ['sarah.chen@stmaryconvent.edu.in', 'sarah.chen@rbmi.in'],
     password: 'password123',
     role: 'employee',
     department: 'Computer Science & Engineering',
-    employee_code: 'SMCS-FAC-1001',
+    employee_code: 'FU-FAC-1001',
     profile_photo_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=256&q=80',
     is_active: 1,
     created_at: '2023-07-10T09:00:00.000Z'
@@ -67,12 +67,12 @@ const INITIAL_USERS = [
   {
     id: 4,
     name: 'Prof. Marcus Vance',
-    email: 'marcus.vance@stmaryconvent.edu.in',
-    aliases: ['marcus.vance@rbmi.in'],
+    email: 'marcus.vance@futureuniversity.edu.in',
+    aliases: ['marcus.vance@stmaryconvent.edu.in', 'marcus.vance@rbmi.in'],
     password: 'password123',
     role: 'employee',
     department: 'Management & MBA',
-    employee_code: 'SMCS-FAC-1002',
+    employee_code: 'FU-FAC-1002',
     profile_photo_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80',
     is_active: 1,
     created_at: '2023-08-20T09:00:00.000Z'
@@ -80,12 +80,12 @@ const INITIAL_USERS = [
   {
     id: 5,
     name: 'Prof. Priya Sharma',
-    email: 'priya.sharma@stmaryconvent.edu.in',
-    aliases: ['priya.sharma@rbmi.in'],
+    email: 'priya.sharma@futureuniversity.edu.in',
+    aliases: ['priya.sharma@stmaryconvent.edu.in', 'priya.sharma@rbmi.in'],
     password: 'password123',
     role: 'employee',
     department: 'Pharmacy / B.Pharm',
-    employee_code: 'SMCS-FAC-1003',
+    employee_code: 'FU-FAC-1003',
     profile_photo_url: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=256&q=80',
     is_active: 1,
     created_at: '2023-09-01T09:00:00.000Z'
@@ -93,12 +93,12 @@ const INITIAL_USERS = [
   {
     id: 6,
     name: 'Prof. Alex Rivera',
-    email: 'alex.rivera@stmaryconvent.edu.in',
-    aliases: ['alex.rivera@rbmi.in'],
+    email: 'alex.rivera@futureuniversity.edu.in',
+    aliases: ['alex.rivera@stmaryconvent.edu.in', 'alex.rivera@rbmi.in'],
     password: 'password123',
     role: 'employee',
     department: 'Information Technology',
-    employee_code: 'SMCS-FAC-1004',
+    employee_code: 'FU-FAC-1004',
     profile_photo_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&q=80',
     is_active: 1,
     created_at: '2023-09-15T09:00:00.000Z'
@@ -107,20 +107,20 @@ const INITIAL_USERS = [
 
 // Initial Students
 const INITIAL_STUDENTS = [
-  { id: 1, name: 'Aarav Mehta', roll_number: 'SMCS-2024-CS01', email: 'aarav.mehta@students.stmaryconvent.edu.in', department: 'Computer Science & Engineering', semester: 'Sem 4', total_working_days: 60, days_present: 55 },
-  { id: 2, name: 'Ishita Verma', roll_number: 'SMCS-2024-CS02', email: 'ishita.verma@students.stmaryconvent.edu.in', department: 'Computer Science & Engineering', semester: 'Sem 4', total_working_days: 60, days_present: 51 },
-  { id: 3, name: 'Rohan Gupta', roll_number: 'SMCS-2024-CS03', email: 'rohan.gupta@students.stmaryconvent.edu.in', department: 'Computer Science & Engineering', semester: 'Sem 4', total_working_days: 60, days_present: 46 },
-  { id: 4, name: 'Ananya Singh', roll_number: 'SMCS-2024-CS04', email: 'ananya.singh@students.stmaryconvent.edu.in', department: 'Computer Science & Engineering', semester: 'Sem 4', total_working_days: 60, days_present: 43 },
-  { id: 5, name: 'Kabir Sen', roll_number: 'SMCS-2024-CS05', email: 'kabir.sen@students.stmaryconvent.edu.in', department: 'Computer Science & Engineering', semester: 'Sem 4', total_working_days: 60, days_present: 38 },
-  { id: 6, name: 'Diya Nair', roll_number: 'SMCS-2024-CS06', email: 'diya.nair@students.stmaryconvent.edu.in', department: 'Computer Science & Engineering', semester: 'Sem 4', total_working_days: 60, days_present: 28 },
-  { id: 7, name: 'Vikram Joshi', roll_number: 'SMCS-2024-IT01', email: 'vikram.joshi@students.stmaryconvent.edu.in', department: 'Information Technology', semester: 'Sem 6', total_working_days: 60, days_present: 53 },
-  { id: 8, name: 'Sneha Patel', roll_number: 'SMCS-2024-IT02', email: 'sneha.patel@students.stmaryconvent.edu.in', department: 'Information Technology', semester: 'Sem 6', total_working_days: 60, days_present: 41 },
-  { id: 9, name: 'Aditya Rao', roll_number: 'SMCS-2024-MBA01', email: 'aditya.rao@students.stmaryconvent.edu.in', department: 'Management & MBA', semester: 'Sem 2', total_working_days: 60, days_present: 50 },
-  { id: 10, name: 'Pooja Kulkarni', roll_number: 'SMCS-2024-MBA02', email: 'pooja.kulkarni@students.stmaryconvent.edu.in', department: 'Management & MBA', semester: 'Sem 2', total_working_days: 60, days_present: 42 },
-  { id: 11, name: 'Devendra Yadav', roll_number: 'SMCS-2024-PHARM01', email: 'devendra.yadav@students.stmaryconvent.edu.in', department: 'Pharmacy / B.Pharm', semester: 'Sem 6', total_working_days: 60, days_present: 54 },
-  { id: 12, name: 'Meera Pillai', roll_number: 'SMCS-2024-PHARM02', email: 'meera.pillai@students.stmaryconvent.edu.in', department: 'Pharmacy / B.Pharm', semester: 'Sem 6', total_working_days: 60, days_present: 39 },
-  { id: 13, name: 'Siddharth Roy', roll_number: 'SMCS-2024-BCA01', email: 'siddharth.roy@students.stmaryconvent.edu.in', department: 'BCA', semester: 'Sem 2', total_working_days: 60, days_present: 52 },
-  { id: 14, name: 'Tanvi Deshmukh', roll_number: 'SMCS-2024-BCA02', email: 'tanvi.deshmukh@students.stmaryconvent.edu.in', department: 'BCA', semester: 'Sem 2', total_working_days: 60, days_present: 40 }
+  { id: 1, name: 'Aarav Mehta', roll_number: 'FU-2024-CS01', email: 'aarav.mehta@students.futureuniversity.edu.in', department: 'Computer Science & Engineering', semester: 'Sem 4', total_working_days: 60, days_present: 55 },
+  { id: 2, name: 'Ishita Verma', roll_number: 'FU-2024-CS02', email: 'ishita.verma@students.futureuniversity.edu.in', department: 'Computer Science & Engineering', semester: 'Sem 4', total_working_days: 60, days_present: 51 },
+  { id: 3, name: 'Rohan Gupta', roll_number: 'FU-2024-CS03', email: 'rohan.gupta@students.futureuniversity.edu.in', department: 'Computer Science & Engineering', semester: 'Sem 4', total_working_days: 60, days_present: 46 },
+  { id: 4, name: 'Ananya Singh', roll_number: 'FU-2024-CS04', email: 'ananya.singh@students.futureuniversity.edu.in', department: 'Computer Science & Engineering', semester: 'Sem 4', total_working_days: 60, days_present: 43 },
+  { id: 5, name: 'Kabir Sen', roll_number: 'FU-2024-CS05', email: 'kabir.sen@students.futureuniversity.edu.in', department: 'Computer Science & Engineering', semester: 'Sem 4', total_working_days: 60, days_present: 38 },
+  { id: 6, name: 'Diya Nair', roll_number: 'FU-2024-CS06', email: 'diya.nair@students.futureuniversity.edu.in', department: 'Computer Science & Engineering', semester: 'Sem 4', total_working_days: 60, days_present: 28 },
+  { id: 7, name: 'Vikram Joshi', roll_number: 'FU-2024-IT01', email: 'vikram.joshi@students.futureuniversity.edu.in', department: 'Information Technology', semester: 'Sem 6', total_working_days: 60, days_present: 53 },
+  { id: 8, name: 'Sneha Patel', roll_number: 'FU-2024-IT02', email: 'sneha.patel@students.futureuniversity.edu.in', department: 'Information Technology', semester: 'Sem 6', total_working_days: 60, days_present: 41 },
+  { id: 9, name: 'Aditya Rao', roll_number: 'FU-2024-MBA01', email: 'aditya.rao@students.futureuniversity.edu.in', department: 'Management & MBA', semester: 'Sem 2', total_working_days: 60, days_present: 50 },
+  { id: 10, name: 'Pooja Kulkarni', roll_number: 'FU-2024-MBA02', email: 'pooja.kulkarni@students.futureuniversity.edu.in', department: 'Management & MBA', semester: 'Sem 2', total_working_days: 60, days_present: 42 },
+  { id: 11, name: 'Devendra Yadav', roll_number: 'FU-2024-PHARM01', email: 'devendra.yadav@students.futureuniversity.edu.in', department: 'Pharmacy / B.Pharm', semester: 'Sem 6', total_working_days: 60, days_present: 54 },
+  { id: 12, name: 'Meera Pillai', roll_number: 'FU-2024-PHARM02', email: 'meera.pillai@students.futureuniversity.edu.in', department: 'Pharmacy / B.Pharm', semester: 'Sem 6', total_working_days: 60, days_present: 39 },
+  { id: 13, name: 'Siddharth Roy', roll_number: 'FU-2024-BCA01', email: 'siddharth.roy@students.futureuniversity.edu.in', department: 'BCA', semester: 'Sem 2', total_working_days: 60, days_present: 52 },
+  { id: 14, name: 'Tanvi Deshmukh', roll_number: 'FU-2024-BCA02', email: 'tanvi.deshmukh@students.futureuniversity.edu.in', department: 'BCA', semester: 'Sem 2', total_working_days: 60, days_present: 40 }
 ];
 
 // Initial Notices
@@ -129,7 +129,7 @@ const INITIAL_NOTICES = [
     id: 1,
     student_id: 6,
     student_name: 'Diya Nair',
-    student_roll: 'SMCS-2024-CS06',
+    student_roll: 'FU-2024-CS06',
     department: 'Computer Science & Engineering',
     semester: 'Sem 4',
     attendance_percent: 46.7,
@@ -142,7 +142,7 @@ const INITIAL_NOTICES = [
     id: 2,
     student_id: 5,
     student_name: 'Kabir Sen',
-    student_roll: 'SMCS-2024-CS05',
+    student_roll: 'FU-2024-CS05',
     department: 'Computer Science & Engineering',
     semester: 'Sem 4',
     attendance_percent: 63.3,
@@ -167,9 +167,9 @@ const INITIAL_RECORDS = [
     flagged: 0,
     flag_reason: null,
     user_name: 'Prof. Sarah Chen',
-    user_email: 'sarah.chen@stmaryconvent.edu.in',
+    user_email: 'sarah.chen@futureuniversity.edu.in',
     user_department: 'Computer Science & Engineering',
-    employee_code: 'SMCS-FAC-1001'
+    employee_code: 'FU-FAC-1001'
   },
   {
     id: 102,
@@ -182,9 +182,9 @@ const INITIAL_RECORDS = [
     flagged: 0,
     flag_reason: null,
     user_name: 'Prof. Marcus Vance',
-    user_email: 'marcus.vance@stmaryconvent.edu.in',
+    user_email: 'marcus.vance@futureuniversity.edu.in',
     user_department: 'Management & MBA',
-    employee_code: 'SMCS-FAC-1002'
+    employee_code: 'FU-FAC-1002'
   }
 ];
 
@@ -337,7 +337,7 @@ export async function handleMockRequest(endpoint, options = {}) {
       password: password,
       role: assignedRole,
       department: assignedDept,
-      employee_code: employee_code || `SMCS-FAC-${Math.floor(1000 + Math.random() * 9000)}`,
+      employee_code: employee_code || `FU-FAC-${Math.floor(1000 + Math.random() * 9000)}`,
       profile_photo_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}`,
       is_active: 1,
       created_at: new Date().toISOString()
@@ -455,9 +455,9 @@ export async function handleMockRequest(endpoint, options = {}) {
       flagged: 0,
       flag_reason: null,
       user_name: currentUser?.name || 'Faculty Member',
-      user_email: currentUser?.email || 'faculty@stmaryconvent.edu.in',
+      user_email: currentUser?.email || 'faculty@futureuniversity.edu.in',
       user_department: currentUser?.department || 'Computer Science & Engineering',
-      employee_code: currentUser?.employee_code || 'SMCS-FAC-1001'
+      employee_code: currentUser?.employee_code || 'FU-FAC-1001'
     };
 
     records.push(newRecord);
@@ -494,9 +494,9 @@ export async function handleMockRequest(endpoint, options = {}) {
       flagged: 0,
       flag_reason: null,
       user_name: currentUser?.name || 'Faculty Member',
-      user_email: currentUser?.email || 'faculty@stmaryconvent.edu.in',
+      user_email: currentUser?.email || 'faculty@futureuniversity.edu.in',
       user_department: currentUser?.department || 'Computer Science & Engineering',
-      employee_code: currentUser?.employee_code || 'SMCS-FAC-1001'
+      employee_code: currentUser?.employee_code || 'FU-FAC-1001'
     };
 
     records.push(newRecord);
@@ -544,7 +544,7 @@ export async function handleMockRequest(endpoint, options = {}) {
     const noticesAcknowledged = notices.filter(n => n.acknowledged).length;
 
     return {
-      institution: "Rajshree Institutions",
+      institution: "Future University",
       portal: 'Dean Academics',
       totalStudents: students.length,
       compliantCount,

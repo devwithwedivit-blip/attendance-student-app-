@@ -34,7 +34,7 @@ async function runTests() {
   const deanLogin = await fetch(`${BASE_URL}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'dean@stmaryconvent.edu.in', password: 'dean123' })
+    body: JSON.stringify({ email: 'dean@futureuniversity.edu.in', password: 'dean123' })
   }).then(r => r.json());
 
   assert(deanLogin.user?.role === 'dean', 'Dean login succeeded with role=dean');
@@ -46,7 +46,7 @@ async function runTests() {
     headers: { 'Authorization': `Bearer ${deanToken}` }
   }).then(r => r.json());
 
-  assert(deanDash.institution === "St. Mary's Convent School", "Institution name is St. Mary's Convent School");
+  assert(deanDash.institution === "Future University", "Institution name is Future University");
   assert(deanDash.totalStudents >= 14, `Dashboard reports ${deanDash.totalStudents} total students`);
   assert(deanDash.belowCriteriaCount > 0, `Dashboard reports ${deanDash.belowCriteriaCount} students below 75% criteria`);
   assert(deanDash.compliantCount > 0, `Dashboard reports ${deanDash.compliantCount} compliant students`);
@@ -133,7 +133,7 @@ async function runTests() {
   const facultyLogin = await fetch(`${BASE_URL}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'sarah.chen@stmaryconvent.edu.in', password: 'password123' })
+    body: JSON.stringify({ email: 'sarah.chen@futureuniversity.edu.in', password: 'password123' })
   }).then(r => r.json());
 
   assert(facultyLogin.user?.role === 'employee', 'Faculty login succeeded with role=employee');
@@ -157,7 +157,8 @@ async function runTests() {
       photo_base64: SAMPLE_BASE64_PHOTO,
       latitude: 28.3670,
       longitude: 79.4304,
-      location_name: "St. Mary's Campus - Main Academic Block"
+      location_name: "Future University Campus - Main Academic Block",
+      face_verified: true
     })
   }).then(r => r.json());
 
@@ -167,7 +168,7 @@ async function runTests() {
   const adminLogin = await fetch(`${BASE_URL}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'admin@stmaryconvent.edu.in', password: 'admin123' })
+    body: JSON.stringify({ email: 'admin@futureuniversity.edu.in', password: 'admin123' })
   }).then(r => r.json());
 
   assert(adminLogin.user?.role === 'admin', 'Admin login successful');

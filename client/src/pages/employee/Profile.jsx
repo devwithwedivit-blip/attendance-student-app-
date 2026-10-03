@@ -13,11 +13,11 @@ export default function EmployeeProfile() {
       <div>
         <h1 style={{ fontSize: '1.75rem' }}>Faculty Identity & Attendance Credentials</h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-          Official institutional credential issued by the Director's Office — Rajshree Institutions
+          Official institutional credential issued by the Office of Academic Affairs — Future University
         </p>
       </div>
 
-      {/* Official Rajshree Institutions Faculty Identity Card */}
+      {/* Official Future University Faculty Identity Card */}
       <div className="glass-card" style={{
         padding: 0,
         overflow: 'hidden',
@@ -38,27 +38,27 @@ export default function EmployeeProfile() {
           gap: '1rem'
         }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
               <div style={{
-                width: 32,
-                height: 32,
-                borderRadius: '4px',
-                background: '#ffffff',
-                color: '#1e3a8a',
+                borderRadius: '6px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                padding: '3px 6px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 900,
-                fontSize: '1.1rem'
+                justifyContent: 'center'
               }}>
-                R
+                <img
+                  src="/logo.png"
+                  alt="Future University"
+                  style={{ height: '42px', width: 'auto', objectFit: 'contain' }}
+                />
               </div>
               <div>
                 <h3 style={{ fontSize: '1.15rem', color: '#ffffff', letterSpacing: '0.04em', margin: 0, textTransform: 'uppercase' }}>
-                  Rajshree Institutions
+                  Future University
                 </h3>
                 <div style={{ fontSize: '0.72rem', color: '#cbd5e1' }}>
-                  Premier Group of Educational Institutions • Main Campus
+                  Learn • Assimilate • Transcend • Main Campus
                 </div>
               </div>
             </div>
@@ -178,7 +178,7 @@ export default function EmployeeProfile() {
       <div className="glass-card">
         <h3 style={{ fontSize: '1.15rem', marginBottom: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--navy-900)' }}>
           <FileText size={18} color="#1e3a8a" />
-          Rajshree Institutions Institutional Attendance Directives for Faculty & Staff
+          Future University Institutional Attendance Directives for Faculty & Staff
         </h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem' }}>

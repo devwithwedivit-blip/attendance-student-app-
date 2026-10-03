@@ -195,7 +195,7 @@ export default function NoticeLog() {
               value={deptFilter}
               onChange={(e) => setDeptFilter(e.target.value)}
             >
-              <option value="">All Rajshree Departments / Sections</option>
+              <option value="">All Future University Departments / Sections</option>
               <option value="Computer Science & Engineering">Computer Science & Engineering</option>
               <option value="Information Technology">Information Technology</option>
               <option value="Management & MBA">Management & MBA</option>
@@ -344,7 +344,7 @@ export default function NoticeLog() {
                     Official Notice Record #{selectedNotice.id}
                   </h3>
                   <p style={{ fontSize: '0.75rem', color: '#475569' }}>
-                    Rajshree Institutions • Office of Academic Affairs
+                    Future University • Office of Academic Affairs
                   </p>
                 </div>
               </div>
@@ -359,15 +359,15 @@ export default function NoticeLog() {
             <div className="modal-body" style={{ padding: '1.5rem', background: '#f8fafc' }}>
               <div className="official-letterhead">
                 <div className="official-letterhead-header">
-                  <div className="letterhead-title">RAJSHREE INSTITUTIONS</div>
+                  <div className="letterhead-title">FUTURE UNIVERSITY</div>
                   <div className="letterhead-sub">
-                    Premier Group of Educational Institutions • Main Campus
+                    Learn • Assimilate • Transcend • Main Campus
                   </div>
                   <div style={{ fontSize: '0.75rem', fontWeight: 'bold', marginTop: '0.35rem', color: '#0f172a' }}>
                     OFFICE OF ACADEMIC AFFAIRS
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.725rem', color: '#475569', marginTop: '0.5rem', borderTop: '1px solid #cbd5e1', paddingTop: '0.35rem' }}>
-                    <span>Dispatch Ref: RI/ACAD/2024-25/NOT-{selectedNotice.roll_number.split('-')[2] || selectedNotice.id}</span>
+                    <span>Dispatch Ref: FU/ACAD/2024-25/NOT-{selectedNotice.roll_number.split('-')[2] || selectedNotice.id}</span>
                     <span>Date: {formatDate(selectedNotice.sent_at)}</span>
                   </div>
                 </div>
@@ -388,12 +388,12 @@ export default function NoticeLog() {
                 {/* Stamp Seal and Sign-off */}
                 <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: '1.5rem', paddingTop: '0.75rem', borderTop: '1px solid #cbd5e1' }}>
                   <div className="letterhead-stamp">
-                    OFFICIALLY DISPATCHED<br />ACADEMIC HEAD • RAJSHREE
+                    OFFICIALLY DISPATCHED<br />ACADEMIC HEAD • FUTURE UNIVERSITY
                   </div>
                   <div style={{ textAlign: 'right', fontFamily: 'Georgia, serif', fontSize: '0.85rem' }}>
                     <div style={{ fontWeight: 'bold', color: '#0f172a' }}>Dr. Rajesh Sharma, Ph.D.</div>
                     <div style={{ fontSize: '0.75rem', color: '#475569' }}>Dean / Academic Head</div>
-                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>Rajshree Institutions</div>
+                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>Future University</div>
                   </div>
                 </div>
               </div>

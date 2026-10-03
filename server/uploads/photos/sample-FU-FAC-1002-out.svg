@@ -16,5 +16,5 @@
     <text x="200" y="305" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#f8fafc" text-anchor="middle">Prof. Marcus Vance</text>
     <text x="200" y="332" font-family="system-ui, sans-serif" font-size="14" fill="#94a3b8" text-anchor="middle">Management & MBA • CHECK-OUT</text>
     <circle cx="65" cy="315" r="8" fill="#f59e0b"/>
-    <text x="320" y="50" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#64748b" text-anchor="end">RBMI ERP</text>
+    <text x="320" y="50" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#64748b" text-anchor="end">Future University ERP</text>
   </svg>

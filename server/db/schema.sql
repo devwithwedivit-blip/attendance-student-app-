@@ -1,4 +1,4 @@
--- St. Mary's Convent School - School ERP & Attendance Database Schema
+-- Future University - ERP & Attendance Database Schema
 
 CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

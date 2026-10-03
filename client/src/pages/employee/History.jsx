@@ -38,7 +38,7 @@ export default function EmployeeHistory() {
         <div>
           <h1 style={{ fontSize: '1.75rem' }}>Faculty Attendance Register & Logbook</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-            Official Biometric & Photographic Duty Archive — Rajshree Institutions (Session 2024–2025)
+            Official Biometric & Photographic Duty Archive — Future University (Session 2024–2025)
           </p>
         </div>
       </div>
@@ -182,7 +182,7 @@ export default function EmployeeHistory() {
                           <Clock size={12} color="#1e3a8a" /> {formatTime(rec.timestamp)}
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.725rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: '0.15rem' }}>
-                          <MapPin size={12} color="#15803d" /> {rec.location_name || "Rajshree Campus Tagged"}
+                          <MapPin size={12} color="#15803d" /> {rec.location_name || "Future University Campus Tagged"}
                         </div>
                       </div>
 

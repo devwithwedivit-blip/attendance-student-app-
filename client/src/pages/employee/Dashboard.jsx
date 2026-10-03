@@ -139,7 +139,7 @@ export default function EmployeeDashboard({ onNavigateHistory }) {
         <div>
           <h1 style={{ fontSize: '1.75rem' }}>Faculty & Staff Attendance Terminal</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-            Official Biometric & Photographic Duty Register — Rajshree Institutions
+            Official Biometric & Photographic Duty Register — Future University
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>

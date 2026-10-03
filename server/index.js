@@ -59,7 +59,7 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`===============================================`);
-  console.log(`🏫 Rajshree Institutions - ERP Server`);
+  console.log(`🏫 Future University - ERP Server`);
   console.log(`🚀 Running on port ${PORT}`);
   console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
   console.log(`📁 Uploads served at: http://localhost:${PORT}/uploads`);

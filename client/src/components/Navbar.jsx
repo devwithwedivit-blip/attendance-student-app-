@@ -29,12 +29,23 @@ export default function Navbar({ currentView, setCurrentView }) {
     <header className="navbar">
       <div className="navbar-inner">
           {/* Brand */}
-          <div className="nav-brand" style={{ cursor: 'pointer' }} onClick={() => handleNavClick(getDefaultHome())}>
-            <div className="nav-brand-logo">
-              {isDean ? <GraduationCap size={24} color="#fef3c7" /> : <Building2 size={22} color="#ffffff" />}
+          <div className="nav-brand" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.85rem' }} onClick={() => handleNavClick(getDefaultHome())}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '6px',
+              padding: '2px 4px',
+              background: 'rgba(255, 255, 255, 0.08)'
+            }}>
+              <img
+                src="/logo.png"
+                alt="Future University"
+                style={{ height: '38px', width: 'auto', maxWidth: '140px', objectFit: 'contain' }}
+              />
             </div>
             <div>
-              <div className="nav-brand-title">Rajshree Institutions</div>
+              <div className="nav-brand-title" style={{ letterSpacing: '0.04em' }}>Future University</div>
               <div className="nav-brand-sub">
                 {getPortalLabel()}
               </div>

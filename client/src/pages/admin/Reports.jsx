@@ -41,7 +41,7 @@ export default function AdminReports() {
         <div>
           <h1 style={{ fontSize: '1.75rem' }}>Faculty Attendance & Workload Reports</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-            Official Academic Workload, Punctuality & Audit Compliance Register — Rajshree Institutions
+            Official Academic Workload, Punctuality & Audit Compliance Register — Future University
           </p>
         </div>
 

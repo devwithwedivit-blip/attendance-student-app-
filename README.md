@@ -1,6 +1,6 @@
-# Rajshree Institutions — ERP & Attendance System
+# Future University — ERP & Attendance System
 
-A comprehensive ERP and Attendance Management System for **Rajshree Institutions**, featuring three dedicated role portals: **Academic Head / Dean**, **Administration & HR**, and **Faculty & Staff** with live photographic verification.
+A comprehensive ERP and Attendance Management System for **Future University**, featuring three dedicated role portals: **Academic Head / Dean**, **Administration & HR**, and **Faculty & Staff** with live photographic verification.
 
 ---
 
@@ -53,10 +53,10 @@ A comprehensive ERP and Attendance Management System for **Rajshree Institutions
 
 | Role | Name | Email | Password | Access Details |
 |---|---|---|---|---|
-| 🎓 **Academic Head** | Dr. Rajesh Sharma | `dean@stmaryconvent.edu.in` | `dean123` | Full Academic Roster, 75% Compliance, Notices, Committee CSV |
-| 👑 **Administrator** | Alex Mercer | `admin@stmaryconvent.edu.in` | `admin123` | HR & Administrative Management, Faculty Records, Live Monitor |
-| 👤 **Faculty (CSE)** | Prof. Sarah Chen | `sarah.chen@stmaryconvent.edu.in` | `password123` | Computer Science Dept • Camera Check-In/Out Hub |
-| 👤 **Faculty (MBA)** | Prof. Marcus Vance | `marcus.vance@stmaryconvent.edu.in` | `password123` | Management Dept • Attendance History |
+| 🎓 **Academic Head** | Dr. Rajesh Sharma | `dean@futureuniversity.edu.in` | `dean123` | Full Academic Roster, 75% Compliance, Notices, Committee CSV |
+| 👑 **Administrator** | Alex Mercer | `admin@futureuniversity.edu.in` | `admin123` | HR & Administrative Management, Faculty Records, Live Monitor |
+| 👤 **Faculty (CSE)** | Prof. Sarah Chen | `sarah.chen@futureuniversity.edu.in` | `password123` | Computer Science Dept • Camera Check-In/Out Hub |
+| 👤 **Faculty (MBA)** | Prof. Marcus Vance | `marcus.vance@futureuniversity.edu.in` | `password123` | Management Dept • Attendance History |
 
 > 💡 **Quick 1-Click Login**: The login screen ([http://localhost:5173](http://localhost:5173)) features 1-click buttons to instantly log into any portal.
 
@@ -64,7 +64,7 @@ A comprehensive ERP and Attendance Management System for **Rajshree Institutions
 
 ## 🛠️ Tech Stack
 
-- **Institution**: St. Mary's Convent School
+- **Institution**: Future University
 - **Frontend**: React 19, Vite, Lucide Icons, Canvas Confetti, Vanilla CSS design system (glassmorphism, mobile-responsive).
 - **Backend**: Node.js, Express.js, JWT Auth (`jsonwebtoken`), `bcryptjs`, Multer.
 - **Database**: Native SQLite (`node:sqlite DatabaseSync` built into Node 24).

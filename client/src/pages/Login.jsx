@@ -48,22 +48,24 @@ export default function Login({ onNavigateSignup }) {
         {/* Brand Logo & Heading */}
         <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
           <div style={{
-            width: '60px',
-            height: '60px',
-            margin: '0 auto 1rem',
-            background: 'linear-gradient(135deg, #6366f1 0%, #10b981 100%)',
-            borderRadius: 'var(--radius-lg)',
             display: 'flex',
-            alignItems: 'center',
             justifyContent: 'center',
-            color: '#ffffff',
-            boxShadow: '0 8px 24px rgba(99, 102, 241, 0.35)'
+            alignItems: 'center',
+            marginBottom: '1.25rem',
+            padding: '0.75rem 1rem',
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderRadius: 'var(--radius-md)',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
           }}>
-            <GraduationCap size={34} />
+            <img
+              src="/logo.png"
+              alt="Future University"
+              style={{ maxHeight: '72px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }}
+            />
           </div>
-          <h1 style={{ fontSize: '1.65rem', marginBottom: '0.25rem' }}>Rajshree Institutions</h1>
+          <h1 style={{ fontSize: '1.65rem', marginBottom: '0.25rem', letterSpacing: '0.02em' }}>Future University</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-            ERP, Academic Compliance & Attendance Portal
+            Learn • Assimilate • Transcend | Biometric ERP Portal
           </p>
         </div>
 
@@ -87,13 +89,13 @@ export default function Login({ onNavigateSignup }) {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label">Institutional Email</label>
+            <label className="form-label">University Email</label>
             <div style={{ position: 'relative' }}>
               <input
                 type="email"
                 required
                 className="form-input"
-                placeholder="name@stmaryconvent.edu.in"
+                placeholder="name@futureuniversity.edu.in"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 style={{ paddingLeft: '2.5rem' }}
@@ -141,7 +143,7 @@ export default function Login({ onNavigateSignup }) {
               type="button"
               className="btn btn-outline btn-sm"
               style={{ justifyContent: 'flex-start', fontSize: '0.785rem', border: '1px solid rgba(99, 102, 241, 0.4)' }}
-              onClick={() => handleQuickDemo('dean@stmaryconvent.edu.in', 'dean123')}
+              onClick={() => handleQuickDemo('dean@futureuniversity.edu.in', 'dean123')}
             >
               <GraduationCap size={15} color="#818cf8" />
               <span style={{ fontWeight: 700, color: '#a5b4fc' }}>🎓 Academic Head</span>
@@ -151,7 +153,7 @@ export default function Login({ onNavigateSignup }) {
               type="button"
               className="btn btn-outline btn-sm"
               style={{ justifyContent: 'flex-start', fontSize: '0.785rem' }}
-              onClick={() => handleQuickDemo('admin@stmaryconvent.edu.in', 'admin123')}
+              onClick={() => handleQuickDemo('admin@futureuniversity.edu.in', 'admin123')}
             >
               <Shield size={14} color="#f59e0b" />
               <span>👑 Admin Portal</span>
@@ -161,7 +163,7 @@ export default function Login({ onNavigateSignup }) {
               type="button"
               className="btn btn-outline btn-sm"
               style={{ justifyContent: 'flex-start', fontSize: '0.785rem' }}
-              onClick={() => handleQuickDemo('sarah.chen@stmaryconvent.edu.in', 'password123')}
+              onClick={() => handleQuickDemo('sarah.chen@futureuniversity.edu.in', 'password123')}
             >
               <User size={14} color="#10b981" />
               <span>Prof. Sarah (CSE)</span>
@@ -171,7 +173,7 @@ export default function Login({ onNavigateSignup }) {
               type="button"
               className="btn btn-outline btn-sm"
               style={{ justifyContent: 'flex-start', fontSize: '0.785rem' }}
-              onClick={() => handleQuickDemo('marcus.vance@stmaryconvent.edu.in', 'password123')}
+              onClick={() => handleQuickDemo('marcus.vance@futureuniversity.edu.in', 'password123')}
             >
               <User size={14} color="#3b82f6" />
               <span>Prof. Marcus (MBA)</span>

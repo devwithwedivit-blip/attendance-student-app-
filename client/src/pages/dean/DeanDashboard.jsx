@@ -74,17 +74,17 @@ export default function DeanDashboard() {
 
     setDeadlineDays('7');
     setCustomNoticeText(
-      `TO:\n${student.name}\nRoll No: ${student.roll_number}\nDepartment: ${student.department} (${student.semester})\nRajshree Institutions\n\n` +
+      `TO:\n${student.name}\nRoll No: ${student.roll_number}\nDepartment: ${student.department} (${student.semester})\nFuture University\n\n` +
       `SUBJECT: OFFICIAL WARNING NOTICE REGARDING SHORTAGE OF ATTENDANCE (< 75%)\n\n` +
       `Dear Student,\n\n` +
       `As per the records of the Academic Attendance Register for the current session, your cumulative attendance currently stands at ${student.attendance_percent}% (${student.days_present} days attended out of ${student.total_working_days} total working days).\n\n` +
-      `Please take note that in accordance with Education Board Regulations and Rajshree Institutions Council Directives, a minimum of 75% attendance in theory lectures and practical classes is strictly mandatory to be eligible to appear in the Final Examinations.\n\n` +
+      `Please take note that in accordance with Education Board Regulations and Future University Council Directives, a minimum of 75% attendance in theory lectures and practical classes is strictly mandatory to be eligible to appear in the Final Examinations.\n\n` +
       `In view of the above shortage, you are hereby directed to:\n` +
       `1. Report immediately in person to the Office of the Academic Head / Dean.\n` +
       `2. Submit valid documentary justification (medical certificates attested by authorized medical practitioner / approved institutional representation) no later than ${dlStr}.\n` +
       `3. Attend mandatory remedial academic tutorials scheduled by your Head of Department.\n\n` +
       `FAILURE TO COMPLY within the stipulated timeframe shall lead to automatic debarment from the issuance of Examination Admit Cards / Hall Tickets.\n\n` +
-      `BY ORDER OF:\nOffice of Academic Affairs\nRajshree Institutions`
+      `BY ORDER OF:\nOffice of Academic Affairs\nFuture University`
     );
   };
 
@@ -141,7 +141,7 @@ export default function DeanDashboard() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Rajshree-Academic-Committee-Below75-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.download = `Future-University-Academic-Committee-Below75-${new Date().toISOString().slice(0, 10)}.csv`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -342,7 +342,7 @@ export default function DeanDashboard() {
               value={selectedDept}
               onChange={(e) => setSelectedDept(e.target.value)}
             >
-              <option value="">All Rajshree Departments / Sections</option>
+              <option value="">All Future University Departments / Sections</option>
               <option value="Computer Science & Engineering">Computer Science & Engineering</option>
               <option value="Information Technology">Information Technology</option>
               <option value="Management & MBA">Management & MBA</option>
@@ -517,7 +517,7 @@ export default function DeanDashboard() {
       </div>
 
       <div style={{ fontSize: '0.8rem', color: '#64748b', textAlign: 'right' }}>
-        Official Academic Records • Rajshree Institutions • Showing {students.length} Enrolled Students
+        Official Academic Records • Future University • Showing {students.length} Enrolled Students
       </div>
 
       {/* Official Notice Letterhead Modal */}
@@ -547,7 +547,7 @@ export default function DeanDashboard() {
                 <div>
                   <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Official Notice of Attendance Shortage</h3>
                   <p style={{ fontSize: '0.75rem', color: '#475569' }}>
-                    Office of Academic Affairs • Rajshree Institutions
+                    Office of Academic Affairs • Future University
                   </p>
                 </div>
               </div>
@@ -563,15 +563,15 @@ export default function DeanDashboard() {
               {/* Formal Letterhead Container */}
               <div className="official-letterhead">
                 <div className="official-letterhead-header">
-                  <div className="letterhead-title">RAJSHREE INSTITUTIONS</div>
+                  <div className="letterhead-title">FUTURE UNIVERSITY</div>
                   <div className="letterhead-sub">
-                    Premier Group of Educational Institutions • Main Campus
+                    Learn • Assimilate • Transcend • Main Campus
                   </div>
                   <div style={{ fontSize: '0.75rem', fontWeight: 'bold', marginTop: '0.35rem', color: '#0f172a' }}>
                     OFFICE OF ACADEMIC AFFAIRS
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.725rem', color: '#475569', marginTop: '0.5rem', borderTop: '1px solid #cbd5e1', paddingTop: '0.35rem' }}>
-                    <span>Ref No: RI/ACAD/2024-25/NOT-{activeNoticeStudent.roll_number.split('-')[2] || '01'}</span>
+                    <span>Ref No: FU/ACAD/2024-25/NOT-{activeNoticeStudent.roll_number.split('-')[2] || '01'}</span>
                     <span>Date: {new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
                   </div>
                 </div>
@@ -597,12 +597,12 @@ export default function DeanDashboard() {
                 {/* Official Sign-off and Stamp Seal */}
                 <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: '1.25rem', paddingTop: '0.75rem', borderTop: '1px solid #cbd5e1' }}>
                   <div className="letterhead-stamp">
-                    OFFICIAL DISPATCH<br />RAJSHREE INSTITUTIONS
+                    OFFICIAL DISPATCH<br />FUTURE UNIVERSITY
                   </div>
                   <div style={{ textAlign: 'right', fontFamily: 'Georgia, serif', fontSize: '0.85rem' }}>
                     <div style={{ fontWeight: 'bold', color: '#0f172a' }}>Dr. Rajesh Sharma, Ph.D.</div>
                     <div style={{ fontSize: '0.75rem', color: '#475569' }}>Dean / Academic Head</div>
-                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>Rajshree Institutions</div>
+                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>Future University</div>
                   </div>
                 </div>
               </div>

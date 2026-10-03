@@ -128,7 +128,7 @@ export default function AdminEmployeeManagement() {
         <div>
           <h1 style={{ fontSize: '1.75rem' }}>Faculty & Staff Directory</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-            Faculty roster, academic department appointments, and joining invitation keys — Rajshree Institutions
+            Faculty roster, academic department appointments, and joining invitation keys — Future University
           </p>
         </div>
 

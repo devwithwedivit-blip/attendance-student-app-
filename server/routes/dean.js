@@ -50,7 +50,7 @@ router.get('/dashboard', (req, res) => {
     const noticesAcknowledged = db.get('SELECT COUNT(*) as count FROM attendance_notices WHERE acknowledged = 1');
 
     res.json({
-      institution: "Rajshree Institutions",
+      institution: "Future University",
       portal: 'Dean Academics',
       totalStudents: students.length,
       compliantCount,
@@ -163,7 +163,7 @@ router.post('/notices/send', (req, res) => {
     const deadlineStr = deadline.toISOString().split('T')[0];
 
     const title = `OFFICIAL NOTICE: Low Attendance Warning (<75% Criteria) - ${student.roll_number}`;
-    const defaultMsg = `Dear ${student.name} (${student.roll_number}), your current cumulative attendance in ${student.department} (${student.semester}) stands at ${pct}%, which is strictly below the mandatory 75% institutional compliance requirement of Rajshree Institutions. Failure to improve your attendance or submit medical / approved justification by ${deadlineStr} may result in debarment from semester final examinations. Please report immediately to the Academic Head / Dean Office.`;
+    const defaultMsg = `Dear ${student.name} (${student.roll_number}), your current cumulative attendance in ${student.department} (${student.semester}) stands at ${pct}%, which is strictly below the mandatory 75% institutional compliance requirement of Future University. Failure to improve your attendance or submit medical / approved justification by ${deadlineStr} may result in debarment from semester final examinations. Please report immediately to the Academic Head / Dean Office.`;
 
     const message = custom_message || defaultMsg;
 
@@ -216,7 +216,7 @@ router.post('/notices/auto-generate', (req, res) => {
 
         if (!recent) {
           const title = `OFFICIAL NOTICE: Low Attendance Warning (<75% Criteria) - ${student.roll_number}`;
-          const message = `Dear ${student.name} (${student.roll_number}), your current cumulative attendance in ${student.department} (${student.semester}) stands at ${pct}%, which is below the mandatory 75% institutional compliance requirement of Rajshree Institutions. Submit justification or report to the Academic Head / Dean Office by ${deadlineStr}.`;
+          const message = `Dear ${student.name} (${student.roll_number}), your current cumulative attendance in ${student.department} (${student.semester}) stands at ${pct}%, which is below the mandatory 75% institutional compliance requirement of Future University. Submit justification or report to the Academic Head / Dean Office by ${deadlineStr}.`;
 
           const r = db.run(
             `INSERT INTO attendance_notices (student_id, attendance_percent_at_time, notice_title, notice_message, deadline_date, email_sent)
@@ -412,7 +412,7 @@ router.get('/export-csv', (req, res) => {
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader(
       'Content-Disposition',
-      `attachment; filename="Rajshree-Academic-Committee-Attendance-Below75-${new Date().toISOString().slice(0, 10)}.csv"`
+      `attachment; filename="Future-University-Academic-Committee-Attendance-Below75-${new Date().toISOString().slice(0, 10)}.csv"`
     );
     res.status(200).send(csvContent);
   } catch (err) {

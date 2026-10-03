@@ -57,7 +57,7 @@ function AppContent() {
             animation: 'spin 0.8s linear infinite',
             margin: '0 auto 1rem'
           }} />
-          <p style={{ fontWeight: 600 }}>Loading St. Mary's Convent School ERP...</p>
+          <p style={{ fontWeight: 600 }}>Loading Future University ERP...</p>
         </div>
       </div>
     );
@@ -99,15 +99,15 @@ function AppContent() {
       <footer className="institutional-ribbon">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           <span style={{ fontWeight: 700, color: '#f8fafc', letterSpacing: '0.02em' }}>
-            ST. MARY'S CONVENT SCHOOL
+            FUTURE UNIVERSITY
           </span>
           <span style={{ color: '#94a3b8' }}>|</span>
           <span style={{ color: '#cbd5e1' }}>
-            Premier Co-Educational Christian Minority Institution (Estd. 1968)
+            Learn • Assimilate • Transcend (Official Attendance & Compliance ERP)
           </span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.725rem', color: '#fef3c7' }}>
-          <span>🏫 St. Mary's Campus</span>
+          <span>🎓 Future University Campus</span>
           <span>•</span>
           <span style={{ fontWeight: 600 }}>Academic Session 2024–25</span>
         </div>

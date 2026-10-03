@@ -62,7 +62,7 @@ export default function AdminLiveDashboard() {
             </span>
           </div>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-            Real-time Photographic Biometric Duty Register — Rajshree Institutions
+            Real-time Photographic Biometric Duty Register — Future University
           </p>
         </div>
 
