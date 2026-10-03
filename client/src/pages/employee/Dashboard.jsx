@@ -53,7 +53,11 @@ export default function EmployeeDashboard({ onNavigateHistory }) {
     setCameraModalOpen(true);
   };
 
-  const handleConfirmAttendance = async ({ photoBlob, photoBase64, latitude, longitude }) => {
+  const handleConfirmAttendance = async ({ photoBlob, photoBase64, latitude, longitude, face_verified }) => {
+    if (!face_verified) {
+      alert('Verification Failed: A live human face must be verified inside the circle guide.');
+      return;
+    }
     setSubmittingAction(true);
     try {
       const isCheckIn = todayData?.status !== 'CHECKED_IN';
@@ -65,6 +69,7 @@ export default function EmployeeDashboard({ onNavigateHistory }) {
       } else if (photoBase64) {
         formData.append('photo_base64', photoBase64);
       }
+      formData.append('face_verified', 'true');
       if (latitude) formData.append('latitude', latitude);
       if (longitude) formData.append('longitude', longitude);
 

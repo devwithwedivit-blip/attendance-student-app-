@@ -682,20 +682,103 @@ h1, h2, h3, h4, h5, h6 {
 
 .camera-reticle {
   position: absolute;
-  inset: 20px;
-  border: 1px dashed rgba(255, 255, 255, 0.4);
-  border-radius: var(--radius-sm);
+  inset: 15px;
   pointer-events: none;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
 .camera-reticle-face {
-  width: 160px;
-  height: 210px;
-  border: 2px solid #38bdf8;
-  border-radius: 50% 50% 45% 45%;
+  position: relative;
+  width: 180px;
+  height: 230px;
+  border-radius: 50% 50% 46% 46%;
+  transition: all 0.25s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.camera-reticle-face.unverified {
+  border: 3px dashed #ef4444;
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.3), inset 0 0 15px rgba(239, 68, 68, 0.15);
+  animation: reticlePulse 1.8s infinite ease-in-out;
+}
+
+.camera-reticle-face.verified {
+  border: 3.5px solid #10b981;
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.55), inset 0 0 20px rgba(16, 185, 129, 0.2);
+}
+
+@keyframes reticlePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+}
+
+.scan-beam {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+  box-shadow: 0 0 10px #38bdf8;
+  animation: scanMove 2s infinite ease-in-out;
+}
+
+.camera-reticle-face.verified .scan-beam {
+  background: linear-gradient(90deg, transparent, #10b981, transparent);
+  box-shadow: 0 0 12px #10b981;
+}
+
+@keyframes scanMove {
+  0% {
+    top: 5%;
+    opacity: 0.3;
+  }
+  50% {
+    top: 92%;
+    opacity: 0.85;
+  }
+  100% {
+    top: 5%;
+    opacity: 0.3;
+  }
+}
+
+.face-status-badge {
+  margin-top: 1rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.775rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.face-status-badge.unverified {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(239, 68, 68, 0.6);
+  color: #fca5a5;
+}
+
+.face-status-badge.verified {
+  background: rgba(6, 78, 59, 0.9);
+  border: 1px solid #10b981;
+  color: #a7f3d0;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
 }
 
 /* Action Hero Card for Check-in */

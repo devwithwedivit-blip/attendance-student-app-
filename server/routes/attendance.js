@@ -121,6 +121,11 @@ router.post('/check-in', verifyToken, upload.single('photo'), async (req, res) =
       return res.status(400).json({ error: 'A live photo capture is required to check in.' });
     }
 
+    // Biometric Security: Face must be verified
+    if (req.body.face_verified !== 'true' && req.body.face_verified !== true) {
+      return res.status(400).json({ error: 'Biometric Security Violation: Live human face must be verified inside the circle before check-in.' });
+    }
+
     const latitude = req.body.latitude ? parseFloat(req.body.latitude) : null;
     const longitude = req.body.longitude ? parseFloat(req.body.longitude) : null;
     const locationName = req.body.location_name || (latitude ? `Coords (${latitude.toFixed(4)}, ${longitude.toFixed(4)})` : 'Office / Remote');
@@ -179,6 +184,11 @@ router.post('/check-out', verifyToken, upload.single('photo'), async (req, res) 
       savedPhoto = await storageService.saveBase64Image(req.body.photo_base64, 'photos');
     } else {
       return res.status(400).json({ error: 'A live photo capture is required to check out.' });
+    }
+
+    // Biometric Security: Face must be verified
+    if (req.body.face_verified !== 'true' && req.body.face_verified !== true) {
+      return res.status(400).json({ error: 'Biometric Security Violation: Live human face must be verified inside the circle before check-out.' });
     }
 
     const latitude = req.body.latitude ? parseFloat(req.body.latitude) : null;

@@ -431,6 +431,10 @@ export async function handleMockRequest(endpoint, options = {}) {
 
   // 5. ATTENDANCE: Check In
   if (path === '/api/attendance/check-in' && method === 'POST') {
+    if (body.face_verified !== 'true' && body.face_verified !== true) {
+      throw new Error('Biometric Security Violation: Live human face must be verified inside the circle before check-in.');
+    }
+
     const userId = currentUser ? currentUser.id : 3;
     const records = getRecords();
     
@@ -467,6 +471,10 @@ export async function handleMockRequest(endpoint, options = {}) {
 
   // 6. ATTENDANCE: Check Out
   if (path === '/api/attendance/check-out' && method === 'POST') {
+    if (body.face_verified !== 'true' && body.face_verified !== true) {
+      throw new Error('Biometric Security Violation: Live human face must be verified inside the circle before check-out.');
+    }
+
     const userId = currentUser ? currentUser.id : 3;
     const records = getRecords();
 
