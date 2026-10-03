@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { Camera, Clock, CheckCircle, MapPin, Calendar, AlertCircle, Sparkles, ChevronRight } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import { api } from '../../utils/api';
 import { formatTime, formatDuration } from '../../utils/helpers';
 import CameraModal from '../../components/CameraModal';
@@ -8,6 +9,7 @@ import PhotoViewerModal from '../../components/PhotoViewerModal';
 import StatusBadge from '../../components/StatusBadge';
 
 export default function EmployeeDashboard({ onNavigateHistory }) {
+  const { user } = useAuth();
   const [todayData, setTodayData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

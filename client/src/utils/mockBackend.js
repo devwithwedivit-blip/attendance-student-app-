@@ -55,7 +55,7 @@ const INITIAL_USERS = [
     id: 3,
     name: 'Prof. Sarah Chen',
     email: 'sarah.chen@futureuniversity.edu.in',
-    aliases: ['sarah.chen@stmaryconvent.edu.in', 'sarah.chen@rbmi.in'],
+    aliases: ['sarah.chen@stmaryconvent.edu.in', 'sarah.chen@rbmi.in', 'sarah@futureuniversity.edu.in', 'prof.sarah@futureuniversity.edu.in', 'sarah', 'sarah.chen'],
     password: 'password123',
     role: 'employee',
     department: 'Computer Science & Engineering',
