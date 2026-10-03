@@ -116,10 +116,95 @@ function AppContent() {
   );
 }
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Portal Error Boundary caught:', error, errorInfo);
+  }
+
+  handleReset = () => {
+    localStorage.clear();
+    window.location.href = '/';
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'var(--bg-primary, #f8fafc)',
+          padding: '2rem',
+          fontFamily: 'system-ui, sans-serif'
+        }}>
+          <div style={{
+            maxWidth: '480px',
+            width: '100%',
+            background: '#ffffff',
+            borderRadius: '12px',
+            padding: '2.5rem',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+            textAlign: 'center'
+          }}>
+            <img src="/logo.png" alt="Future University" style={{ height: '56px', margin: '0 auto 1.5rem', objectFit: 'contain' }} />
+            <h2 style={{ fontSize: '1.35rem', color: '#0f172a', marginBottom: '0.75rem' }}>Future University ERP</h2>
+            <p style={{ color: '#64748b', fontSize: '0.875rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+              The portal encountered an unexpected state. You can reload or reset your browser session.
+            </p>
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
+              <button
+                onClick={() => window.location.reload()}
+                style={{
+                  background: '#1e3a8a',
+                  color: '#ffffff',
+                  border: 'none',
+                  padding: '0.75rem 1.25rem',
+                  borderRadius: '6px',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                Reload Page
+              </button>
+              <button
+                onClick={this.handleReset}
+                style={{
+                  background: '#f1f5f9',
+                  color: '#334155',
+                  border: '1px solid #cbd5e1',
+                  padding: '0.75rem 1.25rem',
+                  borderRadius: '6px',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                Reset Session
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

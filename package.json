@@ -1,0 +1,10 @@
+{
+  "name": "future-university-erp",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "npm --prefix client install && npm --prefix client run build && node copy-dist.js",
+    "dev": "npm --prefix client run dev",
+    "start": "node server/index.js"
+  }
+}

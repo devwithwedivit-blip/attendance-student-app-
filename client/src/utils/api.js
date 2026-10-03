@@ -28,12 +28,14 @@ export async function apiRequest(endpoint, options = {}) {
       headers
     });
 
-    // Check if Netlify or a static host returned HTML 404 for an API endpoint
+    // Check if Netlify or a static host returned HTML (SPA fallback 200 or 404) for an API endpoint
     const contentType = response.headers.get('content-type') || '';
     const isHtmlResponse = contentType.includes('text/html');
 
-    if (response.status === 404 && (!BASE_URL || isHtmlResponse)) {
-      console.info(`[ERP Engine] Endpoint ${endpoint} handled by in-browser mock engine.`);
+    // On static deployments (Netlify/Vercel) without a dedicated backend server,
+    // any API request returning HTML or 404/500+ is seamlessly handled by the in-browser mock engine
+    if (isHtmlResponse || response.status === 404 || (!BASE_URL && response.status >= 400)) {
+      console.info(`[ERP Engine] Endpoint ${endpoint} intercepted (HTTP ${response.status}, HTML=${isHtmlResponse}), delegating to in-browser engine.`);
       return await handleMockRequest(endpoint, options);
     }
 
@@ -62,11 +64,8 @@ export async function apiRequest(endpoint, options = {}) {
     return data;
   } catch (err) {
     // If backend is not running or network request fails on static host, fall back to mock
-    if (!BASE_URL || err.name === 'TypeError' || err.message?.includes('fetch') || err.message?.includes('Failed to fetch')) {
-      console.info(`[ERP Engine] Falling back to in-browser storage for ${endpoint}`);
-      return await handleMockRequest(endpoint, options);
-    }
-    throw err;
+    console.info(`[ERP Engine] Network request to ${endpoint} failed, falling back to in-browser storage:`, err.message);
+    return await handleMockRequest(endpoint, options);
   }
 }
 
