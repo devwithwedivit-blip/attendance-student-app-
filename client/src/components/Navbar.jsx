@@ -146,21 +146,30 @@ export default function Navbar({ currentView, setCurrentView }) {
                   onClick={() => handleNavClick('emp-dashboard')}
                 >
                   <Camera size={16} className="nav-icon" />
-                  <span className="nav-label">{isStudent ? 'Student Check In / Out' : 'Faculty Check In / Out'}</span>
+                  <span className="nav-label">Faculty Check In / Out</span>
+                </button>
+                <button
+                  className={`nav-link ${currentView === 'dept-students' ? 'active' : ''}`}
+                  onClick={() => handleNavClick('dept-students')}
+                  style={{ fontWeight: 600, color: currentView === 'dept-students' ? '#ffffff' : '#93c5fd' }}
+                  title="CSE Department Student Attendance & Petition Management"
+                >
+                  <GraduationCap size={16} className="nav-icon" color={currentView === 'dept-students' ? '#ffffff' : '#60a5fa'} />
+                  <span className="nav-label">CSE Students Attendance</span>
                 </button>
                 <button
                   className={`nav-link ${currentView === 'emp-history' ? 'active' : ''}`}
                   onClick={() => handleNavClick('emp-history')}
                 >
                   <History size={16} className="nav-icon" />
-                  <span className="nav-label">My Attendance Register</span>
+                  <span className="nav-label">My Duty Register</span>
                 </button>
                 <button
                   className={`nav-link ${currentView === 'emp-profile' ? 'active' : ''}`}
                   onClick={() => handleNavClick('emp-profile')}
                 >
                   <User size={16} className="nav-icon" />
-                  <span className="nav-label">{isStudent ? 'Student Profile' : 'Faculty Profile'}</span>
+                  <span className="nav-label">Faculty Profile</span>
                 </button>
               </>
             )}
@@ -231,6 +240,7 @@ export default function Navbar({ currentView, setCurrentView }) {
             ) : (
               <>
                 <button className="nav-link" onClick={() => handleNavClick('emp-dashboard')}>Faculty Check In / Out</button>
+                <button className="nav-link" onClick={() => handleNavClick('dept-students')}>CSE Students Attendance</button>
                 <button className="nav-link" onClick={() => handleNavClick('emp-history')}>My Register</button>
                 <button className="nav-link" onClick={() => handleNavClick('emp-profile')}>Profile</button>
               </>

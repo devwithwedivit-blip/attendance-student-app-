@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { Camera, Clock, CheckCircle, MapPin, Calendar, AlertCircle, Sparkles, ChevronRight } from 'lucide-react';
+import { Camera, Clock, CheckCircle, MapPin, Calendar, AlertCircle, Sparkles, ChevronRight, GraduationCap } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../utils/api';
 import { formatTime, formatDuration } from '../../utils/helpers';
@@ -8,7 +8,7 @@ import CameraModal from '../../components/CameraModal';
 import PhotoViewerModal from '../../components/PhotoViewerModal';
 import StatusBadge from '../../components/StatusBadge';
 
-export default function EmployeeDashboard({ onNavigateHistory }) {
+export default function EmployeeDashboard({ onNavigateHistory, onNavigateStudents }) {
   const { user } = useAuth();
   const [todayData, setTodayData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -161,6 +161,26 @@ export default function EmployeeDashboard({ onNavigateHistory }) {
             <span>{new Date().toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}</span>
           </div>
           <StatusBadge status={todayData?.status} />
+          {onNavigateStudents && (
+            <button
+              className="btn btn-outline btn-sm"
+              onClick={onNavigateStudents}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                color: '#1e3a8a',
+                borderColor: '#bfdbfe',
+                background: '#eff6ff'
+              }}
+              title="Inspect CSE students attendance and approve timing petitions"
+            >
+              <GraduationCap size={15} color="#1d4ed8" />
+              <span>CSE Students & Petitions</span>
+            </button>
+          )}
         </div>
       </div>
 

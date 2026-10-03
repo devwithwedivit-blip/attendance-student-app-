@@ -204,6 +204,128 @@ function saveStudents(students) {
   setStorage('students', students);
 }
 
+function getStudentAdjustments() {
+  return getStorage('student_adjustments', []);
+}
+function saveStudentAdjustments(adjs) {
+  setStorage('student_adjustments', adjs);
+}
+
+function generateMockStudentDays(studentObj, adjustments = []) {
+  const student = studentObj || { id: 15, name: 'Saatwik Gosain', roll_number: 'FU-2024-CSE20', days_present: 54, total_working_days: 60 };
+  const studentId = student.id || 15;
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const totalDays = student.total_working_days || 60;
+  const targetPresent = student.days_present !== undefined ? student.days_present : 54;
+  const targetAbsent = totalDays - targetPresent;
+
+  const absentDays = new Set();
+  const seedMultiplier = (studentId * 7) % 11 + 3;
+  for (let i = 1; i <= targetAbsent; i++) {
+    const dayIndex = ((i * seedMultiplier + studentId * 5) % totalDays) + 1;
+    absentDays.add(dayIndex);
+  }
+
+  const lateDays = new Map();
+  const lateCount = Math.min(8, Math.max(3, Math.floor((60 - targetAbsent) * 0.15)));
+  for (let i = 1; i <= lateCount; i++) {
+    const dayIndex = ((i * 13 + studentId * 3) % totalDays) + 1;
+    if (!absentDays.has(dayIndex)) {
+      const lateMins = ((i * 3 + studentId * 2) % 25) + 2;
+      lateDays.set(dayIndex, lateMins);
+    }
+  }
+
+  const adjsMap = new Map();
+  for (const a of adjustments) {
+    if (a.student_id === studentId) {
+      adjsMap.set(a.date, a);
+    }
+  }
+
+  const days = [];
+  let d = new Date(2024, 6, 15);
+  const now = new Date(2024, 9, 3);
+  let workingDay = 0;
+
+  while (d <= now && workingDay < totalDays) {
+    const dow = d.getDay();
+    if (dow !== 0) {
+      workingDay++;
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const dateStr = `${yyyy}-${mm}-${dd}`;
+
+      const isAbsent = absentDays.has(workingDay);
+      const isLate = !isAbsent && lateDays.has(workingDay);
+      const lateMins = isLate ? lateDays.get(workingDay) : 0;
+
+      let arrivalTime = null;
+      let departureTime = null;
+      let hours = '0.0h';
+      let status = 'Absent';
+
+      if (!isAbsent) {
+        if (isLate) {
+          status = 'Late Comer';
+          const arrHour = 10;
+          const arrMin = String(lateMins).padStart(2, '0');
+          arrivalTime = `${arrHour}:${arrMin} AM`;
+          departureTime = '04:30 PM';
+          const durationTotalMinutes = (16 * 60 + 30) - (10 * 60 + lateMins);
+          const h = Math.floor(durationTotalMinutes / 60);
+          const m = durationTotalMinutes % 60;
+          hours = `${h}h ${m}m`;
+        } else {
+          status = 'On Time';
+          const min = 30 + ((workingDay * 7 + studentId) % 28);
+          arrivalTime = `09:${String(min).padStart(2, '0')} AM`;
+          departureTime = '04:30 PM';
+          const durationTotalMinutes = (16 * 60 + 30) - (9 * 60 + min);
+          const h = Math.floor(durationTotalMinutes / 60);
+          const m = durationTotalMinutes % 60;
+          hours = `${h}h ${m}m`;
+        }
+      }
+
+      const adj = adjsMap.get(dateStr);
+      let petitionApproved = false;
+      let petitionReason = null;
+      let approvedBy = null;
+
+      if (adj) {
+        arrivalTime = adj.new_arrival_time;
+        status = adj.new_status;
+        petitionApproved = true;
+        petitionReason = adj.petition_reason;
+        approvedBy = adj.approved_by;
+        if (!departureTime) departureTime = '04:30 PM';
+        hours = '7h 0m';
+      }
+
+      days.push({
+        id: workingDay,
+        student_id: studentId,
+        date: dateStr,
+        day: daysOfWeek[dow],
+        status,
+        cutoff_time: '10:00 AM',
+        arrival_time: arrivalTime,
+        departure_time: departureTime,
+        late_minutes: isLate && !petitionApproved ? lateMins : null,
+        hours,
+        petition_approved: petitionApproved,
+        petition_reason: petitionReason,
+        approved_by: approvedBy
+      });
+    }
+    d.setDate(d.getDate() + 1);
+  }
+
+  return days.reverse();
+}
+
 function getNotices() {
   return getStorage('notices', INITIAL_NOTICES);
 }
@@ -926,95 +1048,32 @@ export async function handleMockRequest(endpoint, options = {}) {
 
   // 22. STUDENT: My Attendance Register on Days (6 Days/Week: Mon-Sat, 10:00 AM Cutoff)
   if (path === '/api/student/my-attendance') {
-    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const absentDays = new Set([7, 18, 27, 36, 45, 54]); // 6 absences = 54/60 = 90.0%
-    const lateDays = new Map([
-      [4, 4],   // Day 4: 10:04 AM (4 mins late)
-      [12, 8],  // Day 12: 10:08 AM (8 mins late)
-      [21, 15], // Day 21: 10:15 AM (15 mins late)
-      [31, 3],  // Day 31: 10:03 AM (3 mins late)
-      [39, 11], // Day 39: 10:11 AM (11 mins late)
-      [44, 6],  // Day 44: 10:06 AM (6 mins late)
-      [51, 2],  // Day 51: 10:02 AM (2 mins late)
-      [58, 19]  // Day 58: 10:19 AM (19 mins late)
-    ]); // 8 late comers
+    const students = getStudents();
+    const student = students.find(s => s.roll_number.includes('CSE20') || s.name.includes('Saatwik')) || students[0];
+    const adjs = getStudentAdjustments();
+    const days = generateMockStudentDays(student, adjs);
 
-    const days = [];
-    let d = new Date(2024, 6, 15); // Start mid-July
-    const now = new Date(2024, 9, 3);
-    let workingDay = 0;
-
-    while (d <= now && workingDay < 60) {
-      const dow = d.getDay();
-      if (dow !== 0) { // Mon-Sat (6 days a week)
-        workingDay++;
-        const isAbsent = absentDays.has(workingDay);
-        const isLate = !isAbsent && lateDays.has(workingDay);
-        const lateMins = isLate ? lateDays.get(workingDay) : 0;
-        const yyyy = d.getFullYear();
-        const mm = String(d.getMonth() + 1).padStart(2, '0');
-        const dd = String(d.getDate()).padStart(2, '0');
-
-        let arrivalTime = null;
-        let departureTime = null;
-        let hours = '0.0h';
-        let status = 'Absent';
-
-        if (!isAbsent) {
-          if (isLate) {
-            status = 'Late Comer';
-            const arrHour = 10;
-            const arrMin = String(lateMins).padStart(2, '0');
-            arrivalTime = `${arrHour}:${arrMin} AM`;
-            departureTime = '04:30 PM';
-            const durationTotalMinutes = (16 * 60 + 30) - (10 * 60 + lateMins);
-            const h = Math.floor(durationTotalMinutes / 60);
-            const m = durationTotalMinutes % 60;
-            hours = `${h}h ${m}m`;
-          } else {
-            status = 'On Time';
-            // Arrival between 09:30 AM and 09:58 AM (always <= 10:00 AM)
-            const min = 30 + ((workingDay * 7) % 28);
-            arrivalTime = `09:${String(min).padStart(2, '0')} AM`;
-            departureTime = '04:30 PM';
-            const durationTotalMinutes = (16 * 60 + 30) - (9 * 60 + min);
-            const h = Math.floor(durationTotalMinutes / 60);
-            const m = durationTotalMinutes % 60;
-            hours = `${h}h ${m}m`;
-          }
-        }
-
-        days.push({
-          id: workingDay,
-          date: `${yyyy}-${mm}-${dd}`,
-          day: daysOfWeek[dow],
-          status,
-          cutoff_time: '10:00 AM',
-          arrival_time: arrivalTime,
-          departure_time: departureTime,
-          late_minutes: isLate ? lateMins : null,
-          hours
-        });
-      }
-      d.setDate(d.getDate() + 1);
-    }
-
-    days.reverse(); // Newest first
+    const onTimeCount = days.filter(d => d.status.includes('On Time')).length;
+    const lateCount = days.filter(d => d.status === 'Late Comer').length;
+    const absentCount = days.filter(d => d.status === 'Absent').length;
+    const presentCount = days.length - absentCount;
+    const pct = Math.round((presentCount / days.length) * 1000) / 10;
 
     return {
       student: {
-        name: currentUser?.name?.replace(' (Student)', '') || 'Saatwik Gosain',
+        id: student.id,
+        name: student.name,
         roll_number: 'CSE20',
-        official_roll: 'FU-2024-CSE20',
-        department: 'Computer Science & Engineering',
-        semester: 'Sem 4',
-        total_working_days: 60,
-        days_present: 54,
-        on_time_days: 46,
-        late_days: 8,
-        days_absent: 6,
-        attendance_percent: 90.0,
-        is_compliant: true
+        official_roll: student.roll_number,
+        department: student.department,
+        semester: student.semester,
+        total_working_days: days.length,
+        days_present: presentCount,
+        on_time_days: onTimeCount,
+        late_days: lateCount,
+        days_absent: absentCount,
+        attendance_percent: pct,
+        is_compliant: pct >= 75
       },
       days
     };
@@ -1022,66 +1081,157 @@ export async function handleMockRequest(endpoint, options = {}) {
 
   // 23. STUDENT: Export CSV
   if (path === '/api/student/export-csv') {
-    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const absentDays = new Set([7, 18, 27, 36, 45, 54]);
-    const lateDays = new Map([
-      [4, 4], [12, 8], [21, 15], [31, 3], [39, 11], [44, 6], [51, 2], [58, 19]
-    ]);
+    const students = getStudents();
+    const student = students.find(s => s.roll_number.includes('CSE20') || s.name.includes('Saatwik')) || students[0];
+    const adjs = getStudentAdjustments();
+    const days = generateMockStudentDays(student, adjs);
 
     let csv = "Date,Day of Week,Campus Arrival Time,University Cutoff,Punctuality Status,Late Duration,Campus Departure Time,Duration Logged\n";
-    let d = new Date(2024, 6, 15);
-    const now = new Date(2024, 9, 3);
-    let workingDay = 0;
-
-    const rows = [];
-    while (d <= now && workingDay < 60) {
-      const dow = d.getDay();
-      if (dow !== 0) { // 6 days a week
-        workingDay++;
-        const isAbsent = absentDays.has(workingDay);
-        const isLate = !isAbsent && lateDays.has(workingDay);
-        const lateMins = isLate ? lateDays.get(workingDay) : 0;
-        const yyyy = d.getFullYear();
-        const mm = String(d.getMonth() + 1).padStart(2, '0');
-        const dd = String(d.getDate()).padStart(2, '0');
-
-        let arrivalTime = 'N/A';
-        let departureTime = 'N/A';
-        let hours = '0.0h';
-        let status = 'Absent';
-        let lateDuration = 'N/A';
-
-        if (!isAbsent) {
-          if (isLate) {
-            status = 'Late Comer';
-            const arrHour = 10;
-            const arrMin = String(lateMins).padStart(2, '0');
-            arrivalTime = `${arrHour}:${arrMin} AM`;
-            departureTime = '04:30 PM';
-            lateDuration = `${lateMins} mins late`;
-            const durationTotalMinutes = (16 * 60 + 30) - (10 * 60 + lateMins);
-            const h = Math.floor(durationTotalMinutes / 60);
-            const m = durationTotalMinutes % 60;
-            hours = `${h}h ${m}m`;
-          } else {
-            status = 'On Time';
-            const min = 30 + ((workingDay * 7) % 28);
-            arrivalTime = `09:${String(min).padStart(2, '0')} AM`;
-            departureTime = '04:30 PM';
-            lateDuration = 'On Time (<= 10:00 AM)';
-            const durationTotalMinutes = (16 * 60 + 30) - (9 * 60 + min);
-            const h = Math.floor(durationTotalMinutes / 60);
-            const m = durationTotalMinutes % 60;
-            hours = `${h}h ${m}m`;
-          }
-        }
-
-        rows.push(`"${yyyy}-${mm}-${dd}","${daysOfWeek[dow]}","${arrivalTime}","10:00 AM","${status}","${lateDuration}","${departureTime}","${hours}"`);
-      }
-      d.setDate(d.getDate() + 1);
+    for (const d of days) {
+      const lateDuration = d.late_minutes ? `${d.late_minutes} mins late` : d.status.includes('On Time') ? 'On Time (<= 10:00 AM)' : 'N/A';
+      csv += `"${d.date}","${d.day}","${d.arrival_time || 'N/A'}","10:00 AM","${d.status}","${lateDuration}","${d.departure_time || 'N/A'}","${d.hours || 'N/A'}"\n`;
     }
-    rows.reverse();
-    csv += rows.join('\n');
+    return new Blob([csv], { type: 'text/csv' });
+  }
+
+  // 24. FACULTY: CSE Department Students Register
+  if (path === '/api/student/department-students') {
+    const allStudents = getStudents();
+    const dept = searchParams.get('department') || currentUser?.department || 'Computer Science & Engineering';
+    const selectedStudentId = searchParams.get('student_id') ? parseInt(searchParams.get('student_id'), 10) : null;
+
+    const deptStudents = allStudents.filter(s => s.department.toLowerCase().includes('computer science') || s.department.toLowerCase().includes('cse'));
+    const studentsList = deptStudents.length > 0 ? deptStudents : allStudents.slice(0, 7);
+
+    let activeStudent = null;
+    if (selectedStudentId) {
+      activeStudent = studentsList.find(s => s.id === selectedStudentId);
+    }
+    if (!activeStudent) {
+      activeStudent = studentsList.find(s => s.roll_number.includes('CSE20') || s.name.includes('Saatwik')) || studentsList[0];
+    }
+
+    const adjs = getStudentAdjustments();
+    const days = generateMockStudentDays(activeStudent, adjs);
+
+    const onTimeCount = days.filter(d => d.status.includes('On Time')).length;
+    const lateCount = days.filter(d => d.status === 'Late Comer').length;
+    const absentCount = days.filter(d => d.status === 'Absent').length;
+    const presentCount = days.length - absentCount;
+    const pct = Math.round((presentCount / days.length) * 1000) / 10;
+
+    let compliantCount = 0;
+    let belowCriteriaCount = 0;
+    for (const s of studentsList) {
+      const p = (s.days_present / s.total_working_days) * 100;
+      if (p >= 75) compliantCount++;
+      else belowCriteriaCount++;
+    }
+
+    return {
+      department: dept,
+      faculty_in_charge: currentUser?.name || 'Prof. Sarah Chen',
+      students: studentsList.map(s => {
+        const attPct = Math.round((s.days_present / s.total_working_days) * 1000) / 10;
+        return {
+          ...s,
+          attendance_percent: attPct,
+          is_compliant: attPct >= 75
+        };
+      }),
+      selectedStudent: {
+        ...activeStudent,
+        on_time_days: onTimeCount,
+        late_days: lateCount,
+        days_absent: absentCount,
+        days_present: presentCount,
+        attendance_percent: pct,
+        is_compliant: pct >= 75
+      },
+      days,
+      summary: {
+        total_students: studentsList.length,
+        compliant_students: compliantCount,
+        below_criteria_students: belowCriteriaCount,
+        compliance_rate: Math.round((compliantCount / studentsList.length) * 100)
+      }
+    };
+  }
+
+  // 25. FACULTY: Adjust Student Attendance Timing on Petition
+  if (path === '/api/student/adjust-timing' && method === 'POST') {
+    const { student_id, date, new_arrival_time, new_status = 'On Time (Petition Approved)', petition_reason } = body;
+    if (!student_id || !date || !new_arrival_time) {
+      throw new Error('student_id, date, and new_arrival_time are required.');
+    }
+
+    const adjs = getStudentAdjustments();
+    const existingIndex = adjs.findIndex(a => a.student_id === parseInt(student_id, 10) && a.date === date);
+
+    const adjustmentRecord = {
+      id: Date.now(),
+      student_id: parseInt(student_id, 10),
+      date,
+      new_arrival_time,
+      new_status,
+      petition_reason: petition_reason?.trim() || 'Student petition approved by CSE Faculty In-Charge',
+      approved_by: currentUser?.name ? `${currentUser.name} (Faculty)` : 'Prof. Sarah Chen (CSE)',
+      created_at: new Date().toISOString()
+    };
+
+    if (existingIndex >= 0) {
+      adjs[existingIndex] = adjustmentRecord;
+    } else {
+      adjs.push(adjustmentRecord);
+    }
+    saveStudentAdjustments(adjs);
+
+    // Update student days present if changed from absent
+    const students = getStudents();
+    const st = students.find(s => s.id === parseInt(student_id, 10));
+    const updatedDays = generateMockStudentDays(st, adjs);
+
+    return {
+      success: true,
+      message: `Timing updated to ${new_arrival_time} for ${date} on approved student petition.`,
+      adjusted_date: date,
+      new_status,
+      petition_reason: adjustmentRecord.petition_reason,
+      approved_by: adjustmentRecord.approved_by,
+      updated_days: updatedDays
+    };
+  }
+
+  // 26. FACULTY: Department Export CSV
+  if (path === '/api/student/department-export-csv') {
+    const allStudents = getStudents();
+    const deptStudents = allStudents.filter(s => s.department.toLowerCase().includes('computer science') || s.department.toLowerCase().includes('cse'));
+    const studentsList = deptStudents.length > 0 ? deptStudents : allStudents.slice(0, 7);
+
+    const studentIdParam = searchParams.get('student_id') ? parseInt(searchParams.get('student_id'), 10) : null;
+    const adjs = getStudentAdjustments();
+
+    let csv = "Student Roll,Student Name,Department,Date,Day of Week,Campus Arrival Time,University Cutoff,Punctuality Status,Late Duration,Petition Remarks,Campus Departure Time,Hours Logged\n";
+
+    if (studentIdParam) {
+      const targetStudent = studentsList.find(s => s.id === studentIdParam) || studentsList[0];
+      const days = generateMockStudentDays(targetStudent, adjs);
+      for (const d of days) {
+        const lateDuration = d.late_minutes ? `${d.late_minutes} mins late` : d.status.includes('On Time') ? 'On Time (<= 10:00 AM)' : 'N/A';
+        const remarks = d.petition_approved ? `Petition Approved: ${d.petition_reason} (by ${d.approved_by})` : 'Standard Biometric Log';
+        csv += `"${targetStudent.roll_number}","${targetStudent.name}","${targetStudent.department}","${d.date}","${d.day}","${d.arrival_time || 'N/A'}","10:00 AM","${d.status}","${lateDuration}","${remarks}","${d.departure_time || 'N/A'}","${d.hours || 'N/A'}"\n`;
+      }
+    } else {
+      for (const s of studentsList) {
+        const days = generateMockStudentDays(s, adjs);
+        for (const d of days) {
+          const lateDuration = d.late_minutes ? `${d.late_minutes} mins late` : d.status.includes('On Time') ? 'On Time (<= 10:00 AM)' : 'N/A';
+          const remarks = d.petition_approved ? `Petition Approved: ${d.petition_reason} (by ${d.approved_by})` : 'Standard Biometric Log';
+          csv += `"${s.roll_number}","${s.name}","${s.department}","${d.date}","${d.day}","${d.arrival_time || 'N/A'}","10:00 AM","${d.status}","${lateDuration}","${remarks}","${d.departure_time || 'N/A'}","${d.hours || 'N/A'}"\n`;
+        }
+      }
+    }
+
     return new Blob([csv], { type: 'text/csv' });
   }
 

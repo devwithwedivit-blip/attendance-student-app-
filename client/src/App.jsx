@@ -8,6 +8,7 @@ import Signup from './pages/Signup';
 import EmployeeDashboard from './pages/employee/Dashboard';
 import EmployeeHistory from './pages/employee/History';
 import EmployeeProfile from './pages/employee/Profile';
+import DepartmentStudents from './pages/employee/DepartmentStudents';
 
 // Admin Portal Pages
 import AdminLiveDashboard from './pages/admin/LiveDashboard';
@@ -91,8 +92,12 @@ function AppContent() {
 
         {/* Faculty / Staff Views */}
         {currentView === 'emp-dashboard' && (
-          <EmployeeDashboard onNavigateHistory={() => setCurrentView('emp-history')} />
+          <EmployeeDashboard
+            onNavigateHistory={() => setCurrentView('emp-history')}
+            onNavigateStudents={() => setCurrentView('dept-students')}
+          />
         )}
+        {currentView === 'dept-students' && <DepartmentStudents />}
         {currentView === 'emp-history' && <EmployeeHistory />}
         {currentView === 'emp-profile' && <EmployeeProfile />}
 
