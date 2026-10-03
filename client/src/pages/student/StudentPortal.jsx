@@ -10,13 +10,13 @@ import {
   Search,
   Filter,
   ShieldCheck,
+  AlertTriangle,
   Building,
   User,
-  AlertCircle
+  Info
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../utils/api';
-import { formatDate } from '../../utils/helpers';
 
 export default function StudentPortal() {
   const { user } = useAuth();
@@ -42,7 +42,7 @@ export default function StudentPortal() {
     fetchAttendance();
   }, []);
 
-  // Default student details if backend hasn't populated yet
+  // Default student metadata
   const student = attendanceData?.student || {
     name: user?.name?.replace(' (Student)', '') || 'Saatwik Gosain',
     roll_number: user?.employee_code || 'CSE20',
@@ -50,6 +50,8 @@ export default function StudentPortal() {
     semester: 'Sem 4',
     total_working_days: 60,
     days_present: 54,
+    on_time_days: 46,
+    late_days: 8,
     days_absent: 6,
     attendance_percent: 90.0,
     is_compliant: true
@@ -59,8 +61,10 @@ export default function StudentPortal() {
 
   // Filter days based on user selections
   const filteredDays = rawDays.filter(item => {
-    if (statusFilter !== 'all' && item.status.toLowerCase() !== statusFilter.toLowerCase()) {
-      return false;
+    if (statusFilter !== 'all') {
+      if (statusFilter === 'on_time' && item.status !== 'On Time') return false;
+      if (statusFilter === 'late' && item.status !== 'Late Comer') return false;
+      if (statusFilter === 'absent' && item.status !== 'Absent') return false;
     }
     if (monthFilter !== 'all') {
       const itemMonth = new Date(item.date).toLocaleString('en-US', { month: 'short' });
@@ -68,47 +72,57 @@ export default function StudentPortal() {
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      const matchSubject = item.subject?.toLowerCase().includes(q);
-      const matchDate = item.date?.includes(q);
+      const matchDate = item.date?.toLowerCase().includes(q);
       const matchDay = item.day?.toLowerCase().includes(q);
-      if (!matchSubject && !matchDate && !matchDay) return false;
+      const matchStatus = item.status?.toLowerCase().includes(q);
+      const matchTime = item.arrival_time?.toLowerCase().includes(q);
+      if (!matchDate && !matchDay && !matchStatus && !matchTime) return false;
     }
     return true;
   });
 
-  // Client-side CSV generator for instant reliable export
+  const onTimeCount = rawDays.filter(d => d.status === 'On Time').length;
+  const lateCount = rawDays.filter(d => d.status === 'Late Comer').length;
+  const absentCount = rawDays.filter(d => d.status === 'Absent').length;
+
+  // Client-side CSV generator with exact arrival times and cutoff
   const handleDownloadCsv = () => {
     setDownloading(true);
     try {
       const headers = [
         'Date',
-        'Day',
-        'Subject / Lecture',
-        'Attendance Status',
-        'In Time',
-        'Out Time',
-        'Duration',
-        'Attendance Credit'
+        'Day of Week',
+        'Campus Arrival Time',
+        'University Cutoff',
+        'Punctuality Status',
+        'Late Duration',
+        'Campus Departure Time',
+        'Duration Logged'
       ];
 
       const rows = rawDays.map(d => [
         `"${d.date}"`,
         `"${d.day}"`,
-        `"${d.subject}"`,
+        `"${d.arrival_time || 'N/A'}"`,
+        `"${d.cutoff_time || '10:00 AM'}"`,
         `"${d.status}"`,
-        `"${d.in_time || 'N/A'}"`,
-        `"${d.out_time || 'N/A'}"`,
-        `"${d.hours || 'N/A'}"`,
-        `"${d.credit}"`
+        `"${d.late_minutes ? d.late_minutes + ' mins late' : d.status === 'On Time' ? 'On Time' : 'N/A'}"`,
+        `"${d.departure_time || 'N/A'}"`,
+        `"${d.hours || 'N/A'}"`
       ]);
 
       const csvMetadata = [
-        `"Future University - Official Student Attendance Register"`,
+        `"Future University - Official Daily Attendance & Punctuality Register"`,
         `"Student Name:","${student.name}"`,
-        `"Roll Number / Code:","${student.roll_number}"`,
+        `"Student Roll / Code:","${student.roll_number}"`,
         `"Department:","${student.department}"`,
         `"Semester:","${student.semester}"`,
-        `"Cumulative Attendance Rate:","${student.attendance_percent}%"`,
+        `"University Cutoff:","10:00 AM Sharp (Mon-Sat, 6 Days a Week)"`,
+        `"Total Working Days:","${student.total_working_days}"`,
+        `"On-Time Days (<= 10:00 AM):","${onTimeCount}"`,
+        `"Late Comer Days (> 10:00 AM):","${lateCount}"`,
+        `"Days Absent:","${absentCount}"`,
+        `"Overall Attendance Rate:","${student.attendance_percent}%"`,
         `"Compliance Status:","${student.attendance_percent >= 75 ? 'COMPLIANT (Eligible for Final Examinations)' : 'NON-COMPLIANT (<75%)'}"`,
         `"Report Generated:","${new Date().toLocaleString('en-IN')}"`,
         ``
@@ -135,7 +149,7 @@ export default function StudentPortal() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-      {/* Student Identity Card & Compliance Banner */}
+      {/* Student Identity Card & Attendance Status */}
       <div
         className="glass-card"
         style={{
@@ -182,7 +196,7 @@ export default function StudentPortal() {
                 <span>•</span>
                 <span>Semester: <strong>{student.semester}</strong></span>
                 <span>•</span>
-                <span>Academic Session: <strong>2024–2025</strong></span>
+                <span>Working Schedule: <strong>6 Days / Week (Mon–Sat)</strong></span>
               </div>
             </div>
           </div>
@@ -211,31 +225,35 @@ export default function StudentPortal() {
         </div>
       </div>
 
-      {/* Attendance Metrics Cards */}
-      <div className="grid-cols-4">
-        <div className="stat-card" style={{ borderLeftColor: '#1e3a8a' }}>
-          <div>
-            <div className="stat-label">Attendance Rate</div>
-            <div className="stat-val" style={{ color: student.attendance_percent >= 75 ? '#15803d' : '#b91c1c' }}>
-              {student.attendance_percent}%
-            </div>
-            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
-              Mandatory Minimum: 75%
-            </div>
-          </div>
-          <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-sm)', background: '#eff6ff', color: '#1e3a8a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <GraduationCap size={24} />
-          </div>
+      {/* Institutional Directive Banner: 10:00 AM Cutoff */}
+      <div
+        style={{
+          background: '#eff6ff',
+          border: '1px solid #bfdbfe',
+          borderLeft: '5px solid #2563eb',
+          borderRadius: 'var(--radius-sm)',
+          padding: '1rem 1.25rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.85rem'
+        }}
+      >
+        <Clock size={20} color="#1d4ed8" style={{ flexShrink: 0 }} />
+        <div style={{ fontSize: '0.875rem', color: '#1e3a8a', lineHeight: 1.5 }}>
+          <strong>Institutional Attendance Rule:</strong> University morning reporting cutoff is <strong>10:00 AM sharp</strong> (6 days a week, Monday through Saturday). Students arriving at or before 10:00 AM are marked <strong>On Time</strong>. Any student arriving after 10:00 AM, even by a single minute (10:01 AM or later), is officially recorded as a <strong>Late Comer</strong>.
         </div>
+      </div>
 
+      {/* Attendance & Punctuality Metrics Cards */}
+      <div className="grid-cols-4">
         <div className="stat-card" style={{ borderLeftColor: '#16a34a' }}>
           <div>
-            <div className="stat-label">Days Present</div>
+            <div className="stat-label">On-Time Arrivals</div>
             <div className="stat-val" style={{ color: '#15803d' }}>
-              {student.days_present}
+              {onTimeCount} Days
             </div>
             <div style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600, marginTop: '0.25rem' }}>
-              Lectures Attended
+              Arrived by 10:00 AM or before
             </div>
           </div>
           <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-sm)', background: '#f0fdf4', color: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -243,14 +261,29 @@ export default function StudentPortal() {
           </div>
         </div>
 
+        <div className="stat-card" style={{ borderLeftColor: '#d97706' }}>
+          <div>
+            <div className="stat-label">Late Comer Arrivals</div>
+            <div className="stat-val" style={{ color: '#b45309' }}>
+              {lateCount} Days
+            </div>
+            <div style={{ fontSize: '0.75rem', color: '#d97706', fontWeight: 600, marginTop: '0.25rem' }}>
+              Arrived after 10:00 AM cutoff
+            </div>
+          </div>
+          <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-sm)', background: '#fffbeb', color: '#d97706', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Clock size={24} />
+          </div>
+        </div>
+
         <div className="stat-card" style={{ borderLeftColor: '#f43f5e' }}>
           <div>
             <div className="stat-label">Days Absent</div>
             <div className="stat-val" style={{ color: '#be123c' }}>
-              {student.days_absent}
+              {absentCount} Days
             </div>
             <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
-              Leaves / Absences
+              Unexcused leaves / missed days
             </div>
           </div>
           <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-sm)', background: '#fff1f2', color: '#be123c', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -258,18 +291,18 @@ export default function StudentPortal() {
           </div>
         </div>
 
-        <div className="stat-card" style={{ borderLeftColor: '#6366f1' }}>
+        <div className="stat-card" style={{ borderLeftColor: '#1e3a8a' }}>
           <div>
-            <div className="stat-label">Total Working Days</div>
-            <div className="stat-val">
-              {student.total_working_days}
+            <div className="stat-label">Total Attendance Rate</div>
+            <div className="stat-val" style={{ color: student.attendance_percent >= 75 ? '#15803d' : '#b91c1c' }}>
+              {student.attendance_percent}%
             </div>
             <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
-              Official University Days
+              {student.days_present} Present / {student.total_working_days} Days (≥75% Criteria)
             </div>
           </div>
-          <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-sm)', background: '#eef2ff', color: '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Calendar size={24} />
+          <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-sm)', background: '#eff6ff', color: '#1e3a8a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <GraduationCap size={24} />
           </div>
         </div>
       </div>
@@ -278,9 +311,11 @@ export default function StudentPortal() {
       <div className="glass-card" style={{ padding: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
           <div>
-            <h2 style={{ fontSize: '1.25rem', color: '#0f172a', margin: 0 }}>Daily Attendance Register</h2>
+            <h2 style={{ fontSize: '1.25rem', color: '#0f172a', margin: 0 }}>
+              6-Day Weekly Attendance & Arrival Register
+            </h2>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
-              Day-by-day official attendance log for academic lectures and lab sessions
+              Institutional campus attendance for 6 working days a week (Monday to Saturday) with 10:00 AM arrival tracking
             </p>
           </div>
 
@@ -308,12 +343,12 @@ export default function StudentPortal() {
         >
           {/* Search */}
           <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" style={{ fontSize: '0.75rem' }}>Search Subject / Date</label>
+            <label className="form-label" style={{ fontSize: '0.75rem' }}>Search Date / Day / Status</label>
             <div style={{ position: 'relative' }}>
               <input
                 type="text"
                 className="form-input"
-                placeholder="Search subject or date..."
+                placeholder="Search date or day..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{ paddingLeft: '2.2rem', fontSize: '0.85rem' }}
@@ -328,7 +363,7 @@ export default function StudentPortal() {
 
           {/* Status Filter */}
           <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" style={{ fontSize: '0.75rem' }}>Attendance Status</label>
+            <label className="form-label" style={{ fontSize: '0.75rem' }}>Arrival Status Filter</label>
             <select
               className="form-select"
               value={statusFilter}
@@ -336,21 +371,22 @@ export default function StudentPortal() {
               style={{ fontSize: '0.85rem' }}
             >
               <option value="all">All Days ({rawDays.length})</option>
-              <option value="present">Present Only ({rawDays.filter(d => d.status === 'Present').length})</option>
-              <option value="absent">Absent Only ({rawDays.filter(d => d.status === 'Absent').length})</option>
+              <option value="on_time">✅ On Time (≤ 10:00 AM) ({onTimeCount})</option>
+              <option value="late">⏰ Late Comer (&gt; 10:00 AM) ({lateCount})</option>
+              <option value="absent">❌ Absent ({absentCount})</option>
             </select>
           </div>
 
           {/* Month Filter */}
           <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" style={{ fontSize: '0.75rem' }}>Month</label>
+            <label className="form-label" style={{ fontSize: '0.75rem' }}>Academic Month</label>
             <select
               className="form-select"
               value={monthFilter}
               onChange={(e) => setMonthFilter(e.target.value)}
               style={{ fontSize: '0.85rem' }}
             >
-              <option value="all">All Academic Months</option>
+              <option value="all">All Months</option>
               {months.map(m => (
                 <option key={m} value={m}>{m}</option>
               ))}
@@ -393,54 +429,68 @@ export default function StudentPortal() {
               <thead>
                 <tr>
                   <th>Date</th>
-                  <th>Day</th>
-                  <th>Course / Lecture Subject</th>
-                  <th>Lecture Timings</th>
-                  <th>Status</th>
-                  <th>Credit</th>
+                  <th>Day of Week (6 Days/Wk)</th>
+                  <th>Campus Arrival Time</th>
+                  <th>Reporting Cutoff</th>
+                  <th>Punctuality Status</th>
+                  <th>Campus Departure Time</th>
+                  <th>Hours Logged</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredDays.map((entry, idx) => {
-                  const isPresent = entry.status.toLowerCase() === 'present';
+                  const isOnTime = entry.status === 'On Time';
+                  const isLate = entry.status === 'Late Comer';
+                  const isAbsent = entry.status === 'Absent';
+
                   return (
-                    <tr key={entry.id || entry.date + idx} style={{ background: isPresent ? undefined : '#fff5f5' }}>
+                    <tr
+                      key={entry.id || entry.date + idx}
+                      style={{
+                        background: isAbsent ? '#fff5f5' : isLate ? '#fffdf0' : undefined
+                      }}
+                    >
                       <td style={{ fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap' }}>
                         {entry.date}
                       </td>
-                      <td style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>
+                      <td style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>
                         {entry.day}
                       </td>
                       <td>
-                        <div style={{ fontWeight: 600, color: '#1e293b' }}>{entry.subject}</div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                          Biometric Lecture Terminal • Lecture Hall LH-204
-                        </div>
-                      </td>
-                      <td>
-                        <div style={{ fontSize: '0.825rem', color: '#334155', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                          <Clock size={13} color="#64748b" />
-                          <span>{entry.in_time || '09:15 AM'} – {entry.out_time || '04:30 PM'}</span>
-                        </div>
-                        {entry.hours && (
-                          <div style={{ fontSize: '0.725rem', color: '#15803d', fontWeight: 600, marginTop: '0.15rem' }}>
-                            Logged: {entry.hours}
+                        {isAbsent ? (
+                          <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>Did Not Arrive</span>
+                        ) : (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, color: isLate ? '#b45309' : '#15803d' }}>
+                            <Clock size={13} color={isLate ? '#d97706' : '#16a34a'} />
+                            <span>{entry.arrival_time}</span>
                           </div>
                         )}
                       </td>
                       <td>
-                        {isPresent ? (
-                          <span className="badge badge-emerald">
-                            <CheckCircle2 size={12} /> Present
+                        <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 500 }}>
+                          10:00 AM Sharp
+                        </span>
+                      </td>
+                      <td>
+                        {isOnTime ? (
+                          <span className="badge badge-emerald" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                            <CheckCircle2 size={12} /> On Time (≤ 10:00 AM)
+                          </span>
+                        ) : isLate ? (
+                          <span className="badge badge-amber" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: '#fef3c7', color: '#92400e', border: '1px solid #fde68a' }}>
+                            <AlertTriangle size={12} color="#b45309" /> Late Comer ({entry.late_minutes}m Late)
                           </span>
                         ) : (
-                          <span className="badge badge-coral">
+                          <span className="badge badge-coral" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
                             <XCircle size={12} /> Absent
                           </span>
                         )}
                       </td>
-                      <td style={{ fontWeight: 700, color: isPresent ? '#15803d' : '#b91c1c' }}>
-                        {entry.credit !== undefined ? entry.credit : isPresent ? '1.0' : '0.0'}
+                      <td style={{ color: '#475569', fontSize: '0.85rem' }}>
+                        {entry.departure_time || 'N/A'}
+                      </td>
+                      <td style={{ fontWeight: 600, color: isAbsent ? '#94a3b8' : '#0f172a' }}>
+                        {entry.hours || 'N/A'}
                       </td>
                     </tr>
                   );
@@ -452,10 +502,10 @@ export default function StudentPortal() {
 
         <div style={{ marginTop: '1.25rem', fontSize: '0.8rem', color: '#64748b', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
           <div>
-            Showing <strong>{filteredDays.length}</strong> of <strong>{rawDays.length}</strong> academic records
+            Showing <strong>{filteredDays.length}</strong> of <strong>{rawDays.length}</strong> academic records (6 Days/Week: Mon–Sat)
           </div>
           <div>
-            Future University • Office of the Dean of Academics
+            Future University • Mandatory 10:00 AM Arrival Policy
           </div>
         </div>
       </div>
